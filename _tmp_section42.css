@@ -1,0 +1,190 @@
+
+/* ===== 42. LOGIN PAGE ===== */
+:root {
+    --auth-bg-image: url('https://images.unsplash.com/photo-1542314831-068cd1dbb5eb?w=1600');
+}
+body {
+    background-color: var(--gray-50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+.auth-container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    max-width: 1400px;
+    max-height: 900px;
+    margin: auto;
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+}
+.auth-image-panel {
+    flex: 1;
+    background: var(--gradient-primary) var(--auth-bg-image) center/cover;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: var(--space-2xl);
+    color: var(--white);
+}
+.auth-image-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(15, 28, 52, 0.8), rgba(26, 43, 76, 0.3));
+}
+.auth-image-content {
+    position: relative;
+    z-index: 2;
+    animation: fadeInUp 0.8s var(--ease-out) both;
+}
+.auth-image-content .logo {
+     font-size: 36px;
+     background: var(--gradient-accent);
+     -webkit-background-clip: text;
+     -webkit-text-fill-color: transparent;
+     margin-bottom: var(--space-md);
+}
+.auth-image-content h1 {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: var(--space-sm);
+    line-height: 1.2;
+}
+.auth-image-content p {
+    font-size: 16px;
+    max-width: 400px;
+    opacity: 0.8;
+}
+.auth-form-panel {
+    flex: 1;
+    padding: var(--space-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+}
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    animation: fadeIn 0.6s var(--ease-out) 0.2s both;
+}
+.auth-card .logo {
+    font-size: 32px;
+    font-weight: 900;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    margin-bottom: var(--space-sm);
+}
+.auth-card .logo-dot { color: var(--accent); -webkit-text-fill-color: var(--accent); }
+.auth-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: var(--space-xs);
+}
+.auth-subtitle {
+    text-align: center;
+    color: var(--gray-500);
+    margin-bottom: var(--space-lg);
+}
+.auth-form { display: none; }
+.auth-form.active { display: block; animation: fadeIn 0.4s ease; }
+.password-input-wrap { position: relative; }
+.password-input-wrap input { padding-right: 45px !important; }
+.password-toggle {
+    position: absolute; right: 0; top: 0;
+    height: 100%; width: 45px;
+    background: none; border: none; cursor: pointer;
+    color: var(--gray-500); font-size: 16px;
+    transition: var(--transition-fast);
+}
+.password-toggle:hover { color: var(--primary); }
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    margin-top: var(--space-sm);
+}
+.auth-role-text {
+    text-align: center;
+    font-size: 13px;
+    color: var(--gray-500);
+    margin-bottom: var(--space-md);
+    background: var(--gray-50);
+    padding: var(--space-sm);
+    border-radius: var(--radius-md);
+}
+.auth-footer {
+    text-align: center;
+    font-size: 13px;
+    color: var(--gray-500);
+    margin-top: var(--space-lg);
+}
+.auth-footer a { color: var(--primary); font-weight: 600; }
+.auth-footer a:hover { text-decoration: underline; }
+.hotel-login-link {
+    text-align: center;
+    margin: var(--space-md) 0;
+    font-size: 13px;
+}
+.hotel-login-link a { color: var(--accent-dark); font-weight: 600; }
+.hotel-login-link a:hover { text-decoration: underline; }
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--gray-600);
+    margin: var(--space-sm) 0;
+    cursor: pointer;
+}
+.remember-me input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+.role-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: var(--space-md);
+    background: var(--gray-light);
+    border-radius: var(--radius);
+    padding: 4px;
+}
+.role-tab {
+    flex: 1;
+    padding: 10px 14px;
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    color: var(--gray);
+    font-family: var(--font);
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+}
+.role-tab:hover { color: var(--primary); background: rgba(108,60,248,0.04); }
+.role-tab.active {
+    color: var(--primary);
+    background: var(--white);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+@media (max-width: 992px) {
+    .auth-image-panel { display: none; }
+    .auth-container { display: block; height: auto; min-height: 100vh; border-radius: 0; }
+    .auth-form-panel { padding: var(--space-xl) var(--space-lg); }
+}

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#1A2B4C">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="View and manage your hotel bookings - BookMyHotel">
+    <title>My Bookings - BookMyHotel</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .my-bookings-page { padding: 40px 0; min-height: 60vh; }
+        
+        .bookings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .bookings-header h2 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--dark);
+        }
+        .bookings-header .count-badge {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        
+        .bookings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 20px;
+        }
+        
+        .booking-card-item {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-border);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        .booking-card-item:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+        
+        .booking-card-header {
+            padding: 16px 20px;
+            background: var(--gray-light);
+            border-bottom: 1px solid var(--gray-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .booking-card-header .booking-id {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray);
+            font-family: monospace;
+        }
+        
+        .booking-card-body {
+            padding: 20px;
+        }
+        .booking-card-body h3 {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 12px;
+        }
+        .booking-card-body p {
+            margin: 6px 0;
+            font-size: 14px;
+            color: var(--gray-700);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .booking-card-body p i {
+            width: 18px;
+            text-align: center;
+            color: var(--primary);
+        }
+        .booking-card-body p strong {
+            color: var(--dark);
+        }
+        
+        .booking-card-footer {
+            padding: 14px 20px;
+            background: var(--gray-light);
+            border-top: 1px solid var(--gray-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .booking-card-footer .amount {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        .booking-card-footer .status-wrap {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .booking-dates {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background: var(--gray-light);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            margin: 12px 0;
+        }
+        .booking-dates .date-box {
+            text-align: center;
+            flex: 1;
+        }
+        .booking-dates .date-box .date-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--gray);
+            letter-spacing: 0.5px;
+        }
+        .booking-dates .date-box .date-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-top: 2px;
+        }
+        .booking-dates .date-arrow {
+            color: var(--primary);
+            font-size: 18px;
+        }
+        
+        @media (max-width: 480px) {
+            .bookings-grid {
+                grid-template-columns: 1fr;
+            }
+            .booking-card-footer {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">BookMyHotel<span class="logo-dot">.</span></a>
+                <nav class="nav-menu">
+                    <ul id="navLinks">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="hotels.html">Hotels</a></li>
+                    </ul>
+                    <ul id="navAuth"></ul>
+                </nav>
+                <div class="hamburger"><span></span><span></span><span></span></div>
+            </div>
+        </div>
+    </header>
+
+    <section class="page-banner">
+        <div class="container">
+            <h1>My Bookings</h1>
+            <p>View all your hotel bookings in one place</p>
+        </div>
+    </section>
+
+    <section class="my-bookings-page">
+        <div class="container">
+            <div class="bookings-header">
+                <h2><i class="fas fa-calendar-check" style="color:var(--primary);"></i> Your Booking History</h2>
+                <span class="count-badge" id="bookingCount">0 bookings</span>
+            </div>
+            <div id="myBookingsList"></div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section"><h3>BookMyHotel<span class="logo-dot">.</span></h3><p>Your trusted platform for hotel bookings.</p></div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul><li><a href="hotels.html">Browse Hotels</a></li><li><a href="my-bookings.html">My Bookings</a></li><li><a href="#">About Us</a></li></ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul><li><a href="#">Help Center</a></li><li><a href="#">Cancellation Policy</a></li><li><a href="#">Terms</a></li></ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2026 BookMyHotel. All rights reserved.</p></div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="js/firebase-init.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

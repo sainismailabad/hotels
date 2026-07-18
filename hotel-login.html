@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#1A2B4C">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="Hotel Staff Login - BookMyHotel">
+    <title>Hotel Staff Login - BookMyHotel</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .hotel-login-page {
+            min-height: calc(100vh - 80px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #0F1C34 0%, #1A2B4C 50%, #13223A 100%);
+            position: relative;
+        }
+        .hotel-login-page::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1600') center/cover no-repeat;
+            opacity: 0.06;
+        }
+        .hotel-login-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+        }
+        .hotel-login-card .login-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 30px;
+            color: var(--accent);
+        }
+        .hotel-login-card h1 {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+        .hotel-login-card p {
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+        .hotel-login-card .form-group {
+            margin-bottom: 18px;
+        }
+        .hotel-login-card label {
+            display: block;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--dark);
+            margin-bottom: 6px;
+        }
+        .hotel-login-card input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            font-family: inherit;
+            transition: 0.2s ease;
+            box-sizing: border-box;
+        }
+        .hotel-login-card input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(212,175,55,0.15);
+        }
+        .hotel-login-card .input-with-icon {
+            position: relative;
+        }
+        .hotel-login-card .input-with-icon i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+        }
+        .hotel-login-card .input-with-icon input {
+            padding-left: 42px;
+        }
+        .hotel-login-card .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #aaa;
+            cursor: pointer;
+            padding: 4px;
+            font-size: 16px;
+        }
+        .hotel-login-card .password-toggle:hover { color: var(--accent); }
+        .hotel-login-card .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .hotel-login-card .checkbox-row input[type="checkbox"] {
+            width: auto;
+            accent-color: var(--accent);
+        }
+        .hotel-login-card .checkbox-row label {
+            margin: 0;
+            font-weight: 400;
+            font-size: 13px;
+            color: #888;
+        }
+        .hotel-login-card .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: var(--gradient-accent);
+            color: var(--dark);
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.3s ease;
+            font-family: inherit;
+        }
+        .hotel-login-card .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(212,175,55,0.3);
+        }
+        .hotel-login-card .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .auth-error {
+            background: #FFF5F5;
+            color: #E53E3E;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: none;
+            border-left: 4px solid #E53E3E;
+        }
+        .auth-error.show { display: block; }
+        .auth-success {
+            background: #F0FFF4;
+            color: #276749;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: none;
+            border-left: 4px solid #276749;
+        }
+        .auth-success.show { display: block; }
+        .hotel-login-card .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #888;
+        }
+        .hotel-login-card .back-link a {
+            color: var(--accent-dark);
+            font-weight: 700;
+            text-decoration: none;
+        }
+        .hotel-login-card .back-link a:hover { text-decoration: underline; }
+        @media (max-width: 480px) {
+            .hotel-login-card { padding: 28px 24px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">BookMyHotel<span class="logo-dot">.</span></a>
+                <nav class="nav-menu">
+                    <ul id="navLinks">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="hotels.html">Hotels</a></li>
+                    </ul>
+                    <ul id="navAuth">
+                        <!-- Filled by JS -->
+                    </ul>
+                </nav>
+                <div class="hamburger"><span></span><span></span><span></span></div>
+            </div>
+        </div>
+    </header>
+
+    <section class="hotel-login-page">
+        <div class="hotel-login-card">
+            <div class="login-icon"><i class="fas fa-hotel"></i></div>
+            <h1>Hotel Staff Login</h1>
+            <p>Enter your Hotel ID and password to manage your property</p>
+
+            <div id="authError" class="auth-error"></div>
+            <div id="authSuccess" class="auth-success"></div>
+
+            <form id="hotelLoginForm" onsubmit="event.preventDefault();handleHotelStaffLogin(event)">
+                <div class="form-group">
+                    <label><i class="fas fa-id-card"></i> Hotel ID</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-building"></i>
+                        <input type="text" id="hotelLoginId" placeholder="Enter your Hotel ID (e.g. hotel_mumbai_01)" required autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-key"></i>
+                        <input type="password" id="hotelLoginPassword" placeholder="Enter your password" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('hotelLoginPassword', this)" tabindex="-1"><i class="fas fa-eye"></i></button>
+                    </div>
+                </div>
+                <div class="checkbox-row">
+                    <input type="checkbox" id="hotelKeepSignedIn">
+                    <label for="hotelKeepSignedIn">Keep me signed in</label>
+                </div>
+                <button type="submit" class="btn-login" id="hotelLoginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+            </form>
+
+            <div class="back-link">
+                <a href="login.html"><i class="fas fa-arrow-left"></i> Back to Customer Login</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>BookMyHotel<span class="logo-dot">.</span></h3>
+                    <p>Hotel staff management portal.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="hotels.html">Browse Hotels</a></li>
+                        <li><a href="login.html">Customer Login</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul><li><a href="#">Help Center</a></li></ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2026 BookMyHotel. All rights reserved.</p></div>
+        </div>
+    </footer>
+
+    <div class="modal-overlay" id="modalOverlay"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="js/firebase-init.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

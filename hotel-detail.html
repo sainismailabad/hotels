@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#1A2B4C">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- ===== PRIMARY SEO ===== -->
+    <meta name="description" content="Book premium hotels in India at best prices. View photos, amenities, reviews and book instantly with instant confirmation on BookMyHotel.">
+    <meta name="keywords" content="hotel booking, hotel details, hotel rooms, book hotel online, best hotel deals, India hotels, hotel amenities, hotel reviews">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="BookMyHotel">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="1 day">
+    <link rel="canonical" href="https://bookmyhotel.com/hotel-detail.html">
+    
+    <!-- ===== OPEN GRAPH / SOCIAL MEDIA ===== -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="BookMyHotel">
+    <meta property="og:title" content="Hotel Details - BookMyHotel | Best Hotel Booking Platform">
+    <meta property="og:description" content="View hotel photos, amenities, reviews and book your stay at the best price. Instant confirmation on BookMyHotel.">
+    <meta property="og:url" content="https://bookmyhotel.com/hotel-detail.html">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="en_IN">
+    
+    <!-- ===== TWITTER CARDS ===== -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@BookMyHotel">
+    <meta name="twitter:title" content="Hotel Details - BookMyHotel">
+    <meta name="twitter:description" content="View hotel photos, amenities, reviews and book your stay at the best price.">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200">
+    
+    <!-- ===== STRUCTURED DATA (JSON-LD) ===== -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Hotel Details - BookMyHotel",
+        "description": "View hotel details, photos, amenities and book your stay online.",
+        "publisher": {
+            "@type": "Organization",
+            "name": "BookMyHotel",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://bookmyhotel.com/images/logo.png"
+            }
+        },
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://bookmyhotel.com/hotels.html?search={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+    
+    <title>Hotel Details - BookMyHotel | Best Hotel Booking Platform</title>
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ===== PROFESSIONAL HOTEL DETAIL PAGE v2.0 ===== */
+        .detail-page {
+            background: var(--gray-50);
+            padding: 0 0 60px;
+        }
+        [data-theme="dark"] .detail-page { background: #1a1a1a; }
+
+        /* Breadcrumb */
+        .detail-breadcrumb {
+            padding: 18px 0 8px;
+            font-size: 13px;
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .detail-breadcrumb a { color: var(--primary); font-weight: 600; text-decoration: none; }
+        .detail-breadcrumb a:hover { text-decoration: underline; color: var(--accent); }
+        .detail-breadcrumb .sep { color: var(--gray-300); }
+        .breadcrumb-current { color: var(--dark); font-weight: 700; }
+
+        /* Main Layout */
+        .detail-main-layout {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 30px;
+            margin-top: 10px;
+            align-items: start;
+        }
+        .detail-left { min-width: 0; }
+        .detail-right { position: sticky; top: 90px; }
+
+        /* ===== PROFESSIONAL GALLERY ===== */
+        .detail-gallery {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 24px;
+            border: 1px solid rgba(26, 43, 76, 0.06);
+        }
+        .gallery-main {
+            position: relative;
+            height: 450px;
+            background: var(--gray-100);
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .gallery-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s var(--ease-out);
+        }
+        .gallery-main:hover img { transform: scale(1.03); }
+        .gallery-main .gallery-nav {
+            position: absolute;
+            top: 50%; transform: translateY(-50%);
+            width: 44px; height: 44px; border-radius: 50%;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(8px);
+            border: none;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 16px; color: var(--dark);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            transition: all 0.3s var(--ease-out); z-index: 5;
+            opacity: 0;
+        }
+        .gallery-main:hover .gallery-nav { opacity: 1; }
+        .gallery-main .gallery-nav:hover { background: #fff; transform: translateY(-50%) scale(1.1); }
+        .gallery-main .gallery-nav.prev { left: 16px; }
+        .gallery-main .gallery-nav.next { right: 16px; }
+
+        .gallery-counter {
+            position: absolute; bottom: 16px; right: 16px;
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            z-index: 5;
+            letter-spacing: 0.3px;
+        }
+        .gallery-thumbs {
+            display: flex; gap: 8px; padding: 12px 16px;
+            overflow-x: auto; -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+        .gallery-thumbs::-webkit-scrollbar { height: 4px; }
+        .gallery-thumbs::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 4px; }
+        .gallery-thumbs .thumb {
+            flex: none; width: 80px; height: 60px; border-radius: 8px;
+            overflow: hidden; cursor: pointer; border: 2px solid transparent;
+            transition: all 0.2s ease; opacity: 0.6;
+        }
+        .gallery-thumbs .thumb:hover { opacity: 0.9; border-color: var(--gray-300); }
+        .gallery-thumbs .thumb.active { border-color: var(--accent); opacity: 1; box-shadow: 0 0 0 2px rgba(212,175,55,0.3); }
+        .gallery-thumbs .thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* ===== HOTEL INFO CARD ===== */
+        .hotel-info-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 32px 34px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 24px;
+            border: 1px solid rgba(26, 43, 76, 0.06);
+            transition: background 0.3s ease;
+        }
+        [data-theme="dark"] .hotel-info-card { background: var(--gray-50); }
+        .hotel-info-card .hotel-name {
+            font-size: 28px; font-weight: 900; color: var(--dark);
+            margin-bottom: 6px; line-height: 1.15;
+            letter-spacing: -0.02em;
+        }
+        .hotel-info-card .hotel-location {
+            font-size: 15px; color: var(--gray-500); margin-bottom: 14px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .hotel-info-card .hotel-location i { color: var(--accent); font-size: 14px; }
+        .hotel-info-card .hotel-meta-row {
+            display: flex; align-items: center; gap: 20px;
+            flex-wrap: wrap; margin-bottom: 18px;
+        }
+        .hotel-info-card .rating-pill {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: linear-gradient(135deg, #1a6d2e, #238636);
+            color: #fff;
+            padding: 5px 14px; border-radius: 6px;
+            font-size: 14px; font-weight: 800;
+        }
+        .hotel-info-card .rating-pill i { font-size: 12px; }
+        .hotel-info-card .reviews-count { font-size: 14px; color: var(--gray-500); font-weight: 500; }
+        .hotel-info-card .rooms-left {
+            font-size: 13px; color: #e67e22; font-weight: 700;
+            display: flex; align-items: center; gap: 5px;
+            background: rgba(230,126,34,0.08);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+        .hotel-info-card .hotel-desc {
+            font-size: 15px; line-height: 1.8; color: var(--gray-700);
+            margin-bottom: 24px;
+        }
+
+        /* Tabs */
+        .detail-tabs {
+            display: flex; gap: 2px; margin-bottom: 20px;
+            background: var(--gray-100); border-radius: var(--radius-lg); padding: 4px;
+            overflow-x: auto; -webkit-overflow-scrolling: touch;
+        }
+        .detail-tab {
+            flex: 1; padding: 12px 20px; border: none; background: transparent;
+            font-size: 13px; font-weight: 700; cursor: pointer;
+            border-radius: var(--radius-md); color: var(--gray-500);
+            font-family: var(--font);
+            transition: all 0.2s ease; white-space: nowrap;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .detail-tab:hover { color: var(--primary); background: rgba(26,43,76,0.04); }
+        .detail-tab.active {
+            background: var(--white); color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .detail-tab-content { display: none; animation: fadeIn 0.3s var(--ease-out); }
+        .detail-tab-content.active { display: block; }
+
+        /* Amenities Grid */
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 10px;
+        }
+        .amenity-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px 16px; background: var(--gray-50);
+            border-radius: var(--radius-md); font-size: 13px; color: var(--gray-700);
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+        .amenity-item:hover { 
+            background: rgba(212,175,55,0.06); 
+            border-color: rgba(212,175,55,0.15);
+            transform: translateY(-1px);
+        }
+        .amenity-item i { color: var(--accent); font-size: 16px; width: 20px; text-align: center; }
+
+        /* Policies */
+        .policies-list { display: grid; gap: 10px; }
+        .policy-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 18px; background: var(--gray-50);
+            border-radius: var(--radius-md); font-size: 14px;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+        .policy-item:hover { border-color: rgba(26,43,76,0.08); }
+        .policy-item i { color: var(--primary); width: 20px; text-align: center; font-size: 16px; }
+        .policy-item strong { margin-right: 4px; color: var(--dark); }
+
+        /* Reviews */
+        .reviews-list { display: grid; gap: 14px; }
+        .review-item {
+            padding: 18px 20px; background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+        .review-item:hover { border-color: rgba(26,43,76,0.06); }
+        .review-item .review-header {
+            display: flex; align-items: center; gap: 12px; margin-bottom: 10px;
+        }
+        .review-item .review-avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--gradient-primary); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 16px;
+            flex-shrink: 0;
+        }
+        .review-item .review-name { font-weight: 700; font-size: 14px; color: var(--dark); }
+        .review-item .review-date { font-size: 12px; color: var(--gray-500); margin-top: 1px; }
+        .review-item .review-text { font-size: 14px; color: var(--gray-700); line-height: 1.7; }
+
+        /* ===== BOOKING SIDEBAR ===== */
+        .booking-sidebar {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            border: 1px solid rgba(26, 43, 76, 0.06);
+            position: relative;
+        }
+        [data-theme="dark"] .booking-sidebar { background: var(--gray-50); }
+        .booking-sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--gradient-accent);
+        }
+        .booking-sidebar-header {
+            padding: 28px 28px 18px;
+            border-bottom: 1px solid rgba(26,43,76,0.06);
+        }
+        .booking-sidebar-header .price-display {
+            display: flex; align-items: baseline; gap: 6px;
+        }
+        .booking-sidebar-header .price-amount {
+            font-size: 36px; font-weight: 900; color: var(--primary);
+            letter-spacing: -0.02em;
+        }
+        .booking-sidebar-header .price-per {
+            font-size: 15px; color: var(--gray-500);
+        }
+        .booking-sidebar-header .price-sub {
+            font-size: 13px; color: var(--gray-500); margin-top: 3px;
+        }
+        .booking-sidebar-body { padding: 22px 28px 28px; }
+        .booking-sidebar-body .form-group { margin-bottom: 16px; }
+        .booking-sidebar-body .form-group label {
+            display: block; font-size: 12px; font-weight: 700;
+            color: var(--gray-700); margin-bottom: 5px; text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .booking-sidebar-body .form-group input,
+        .booking-sidebar-body .form-group select {
+            width: 100%; padding: 12px 16px;
+            border: 2px solid rgba(26,43,76,0.08);
+            border-radius: var(--radius-md);
+            font-size: 14px; outline: none; font-family: inherit;
+            background: var(--gray-50);
+            transition: all 0.2s ease; color: var(--dark);
+        }
+        .booking-sidebar-body .form-group input:hover,
+        .booking-sidebar-body .form-group select:hover {
+            border-color: rgba(26,43,76,0.15);
+        }
+        .booking-sidebar-body .form-group input:focus,
+        .booking-sidebar-body .form-group select:focus {
+            border-color: var(--accent); background: var(--white);
+            box-shadow: 0 0 0 4px rgba(212,175,55,0.1);
+        }
+        .booking-sidebar-body .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236C757D' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+        }
+
+        .price-breakdown {
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px; margin: 18px 0;
+            border: 1px solid rgba(26,43,76,0.04);
+        }
+        .price-breakdown .price-row {
+            display: flex; justify-content: space-between;
+            padding: 7px 0; font-size: 14px; color: var(--gray-700);
+        }
+        .price-breakdown .price-row.total {
+            border-top: 2px solid rgba(26,43,76,0.08);
+            margin-top: 8px;
+            padding-top: 14px;
+            font-size: 20px; font-weight: 800;
+            color: var(--primary);
+        }
+
+        .btn-book-now {
+            width: 100%; padding: 16px;
+            background: var(--gradient-accent); color: #fff;
+            border: none; border-radius: var(--radius-lg);
+            font-size: 17px; font-weight: 800; cursor: pointer;
+            transition: all 0.3s var(--ease-out);
+            font-family: var(--font);
+            box-shadow: 0 8px 25px rgba(212,175,55,0.3);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-book-now:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 14px 40px rgba(212,175,55,0.4);
+        }
+        .btn-book-now:active { transform: scale(0.97); }
+
+        .secure-badge {
+            text-align: center; font-size: 12px; color: var(--gray-500);
+            margin-top: 16px; display: flex; align-items: center;
+            justify-content: center; gap: 6px;
+        }
+        .secure-badge i { color: var(--success); }
+
+        /* Coupon */
+        .coupon-row {
+            display: flex; gap: 8px; align-items: center;
+        }
+        .coupon-row input {
+            flex: 1; padding: 10px 14px;
+            border: 2px solid rgba(26,43,76,0.08);
+            border-radius: var(--radius-md);
+            font-size: 13px; outline: none; font-family: inherit;
+            background: var(--gray-50); text-transform: uppercase;
+            transition: all 0.2s ease;
+        }
+        .coupon-row input:focus { border-color: var(--accent); background: var(--white); box-shadow: 0 0 0 3px rgba(212,175,55,0.1); }
+        #couponStatus { margin-top: 6px; font-size: 12px; font-weight: 600; }
+
+        /* ===== LIGHTBOX ===== */
+        .lightbox {
+            display: none; position: fixed; inset: 0; z-index: 5000;
+            background: rgba(0,0,0,0.92); backdrop-filter: blur(12px);
+        }
+        .lightbox.active { display: flex; align-items: center; justify-content: center; }
+        .lightbox img {
+            max-width: 92vw; max-height: 90vh; border-radius: 12px;
+            box-shadow: 0 30px 100px rgba(0,0,0,0.5);
+        }
+        .lightbox-close {
+            position: absolute; top: 24px; right: 24px;
+            width: 48px; height: 48px; border-radius: 50%;
+            background: rgba(255,255,255,0.12); border: none;
+            color: #fff; font-size: 24px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .lightbox-close:hover { background: rgba(255,255,255,0.2); transform: scale(1.1); }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 992px) {
+            .detail-main-layout { grid-template-columns: 1fr; }
+            .detail-right { position: static; }
+            .gallery-main { height: 350px; }
+            .hotel-info-card .hotel-name { font-size: 24px; }
+            .hotel-info-card { padding: 24px; }
+            .booking-sidebar-header { padding: 24px 24px 16px; }
+            .booking-sidebar-body { padding: 18px 24px 24px; }
+        }
+        @media (max-width: 768px) {
+            .gallery-main { height: 280px; }
+            .gallery-main .gallery-nav { opacity: 1; width: 36px; height: 36px; font-size: 14px; }
+            .hotel-info-card { padding: 20px; }
+            .hotel-info-card .hotel-name { font-size: 22px; }
+            .booking-sidebar-header { padding: 20px 20px 14px; }
+            .booking-sidebar-body { padding: 16px 20px 20px; }
+            .booking-sidebar-header .price-amount { font-size: 28px; }
+            .amenities-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+            .detail-tabs { overflow-x: auto; }
+            .detail-tab { flex: none; padding: 10px 16px; font-size: 12px; }
+        }
+        @media (max-width: 480px) {
+            .gallery-main { height: 220px; }
+            .gallery-main .gallery-nav { width: 32px; height: 32px; font-size: 12px; }
+            .gallery-thumbs .thumb { width: 60px; height: 45px; }
+            .hotel-info-card { padding: 16px; border-radius: 12px; }
+            .hotel-info-card .hotel-name { font-size: 20px; }
+            .booking-sidebar-header .price-amount { font-size: 24px; }
+            .price-breakdown { padding: 14px 16px; }
+            .booking-sidebar-header { padding: 18px 18px 12px; }
+            .booking-sidebar-body { padding: 14px 18px 18px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo" aria-label="BookMyHotel Home">BookMyHotel<span class="logo-dot">.</span></a>
+                <nav class="nav-menu" aria-label="Main navigation">
+                    <ul id="navLinks">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="hotels.html">Hotels</a></li>
+                    </ul>
+                    <ul id="navAuth"></ul>
+                </nav>
+                <button class="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="detail-page">
+            <div class="container">
+                <!-- Breadcrumb with SEO microdata -->
+                <nav class="detail-breadcrumb" aria-label="Breadcrumb">
+                    <a href="index.html">Home</a>
+                    <span class="sep" aria-hidden="true">›</span>
+                    <a href="hotels.html">Hotels</a>
+                    <span class="sep" aria-hidden="true">›</span>
+                    <span id="detailBreadcrumb" class="breadcrumb-current" aria-current="page">Hotel Name</span>
+                </nav>
+
+                <div class="detail-main-layout">
+                    <!-- LEFT COLUMN -->
+                    <div class="detail-left">
+                        <!-- Gallery with SEO image alt -->
+                        <div class="detail-gallery" itemscope itemtype="https://schema.org/ImageGallery">
+                            <div class="gallery-main" onclick="openLightbox()" role="img" id="galleryMain">
+                                <img id="mainImage" src="" alt="Hotel gallery image - BookMyHotel" loading="eager">
+                                <button class="gallery-nav prev" onclick="event.stopPropagation();navigateGallery(-1)" aria-label="Previous image"><i class="fas fa-chevron-left"></i></button>
+                                <button class="gallery-nav next" onclick="event.stopPropagation();navigateGallery(1)" aria-label="Next image"><i class="fas fa-chevron-right"></i></button>
+                                <div class="gallery-counter" id="galleryCounter" aria-live="polite">1 / 1</div>
+                            </div>
+                            <div class="gallery-thumbs" id="thumbnailContainer" role="list"></div>
+                        </div>
+
+                        <!-- Hotel Info with SEO microdata -->
+                        <article class="hotel-info-card" itemscope itemtype="https://schema.org/Hotel">
+                            <meta itemprop="telephone" content="1800-BOOKMYHOTEL">
+                            <meta itemprop="priceRange" content="₹₹">
+                            
+                            <h1 class="hotel-name" id="detailName" itemprop="name">Hotel Name</h1>
+                            <div class="hotel-location" id="detailLocation" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+                                <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                                <span itemprop="addressLocality" id="detailCity">Location</span>
+                            </div>
+                            <div class="hotel-meta-row">
+                                <span class="rating-pill" id="detailRating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+                                    <i class="fas fa-star" aria-hidden="true"></i>
+                                    <span itemprop="ratingValue">4.0</span>
+                                    <meta itemprop="bestRating" content="5">
+                                    <meta itemprop="worstRating" content="1">
+                                </span>
+                                <span class="reviews-count" id="detailReviewCount"><span itemprop="reviewCount">120</span> reviews</span>
+                                <span class="rooms-left" id="detailRoomsLeft"><i class="fas fa-bed" aria-hidden="true"></i> <span id="roomsLeftText">5 rooms left</span></span>
+                            </div>
+                            <p class="hotel-desc" id="detailDescription" itemprop="description">Description here...</p>
+
+                            <!-- Tabs -->
+                            <div class="detail-tabs" role="tablist">
+                                <button class="detail-tab active" role="tab" aria-selected="true" onclick="switchDetailTab('amenities',this)"><i class="fas fa-concierge-bell" aria-hidden="true"></i> Amenities</button>
+                                <button class="detail-tab" role="tab" aria-selected="false" onclick="switchDetailTab('policies',this)"><i class="fas fa-info-circle" aria-hidden="true"></i> Policies</button>
+                                <button class="detail-tab" role="tab" aria-selected="false" onclick="switchDetailTab('reviews',this)"><i class="fas fa-comments" aria-hidden="true"></i> Reviews</button>
+                            </div>
+
+                            <!-- Amenities Tab -->
+                            <div class="detail-tab-content active" id="tab-amenities" role="tabpanel">
+                                <div class="amenities-grid" id="detailAmenities" itemprop="amenityFeature"></div>
+                            </div>
+                            <!-- Policies Tab -->
+                            <div class="detail-tab-content" id="tab-policies" role="tabpanel">
+                                <div class="policies-list">
+                                    <div class="policy-item"><i class="fas fa-sign-in-alt"></i> <strong>Check In:</strong> <span id="policyCheckIn">14:00</span></div>
+                                    <div class="policy-item"><i class="fas fa-sign-out-alt"></i> <strong>Check Out:</strong> <span id="policyCheckOut">11:00</span></div>
+                                    <div class="policy-item"><i class="fas fa-times-circle"></i> <strong>Cancellation:</strong> <span id="policyCancellation">Free cancellation</span></div>
+                                    <div class="policy-item"><i class="fas fa-undo"></i> <strong>Refund Policy:</strong> <span id="policyRefund">Full refund</span></div>
+                                </div>
+                            </div>
+                            <!-- Reviews Tab -->
+                            <div class="detail-tab-content" id="tab-reviews" role="tabpanel">
+                                <div class="reviews-list" id="detailReviews">
+                                    <p class="empty-state">No reviews yet.</p>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                    <!-- Offers & Coupons -->
+                    <div id="offersCardsHotelDetail" class="offers-section"></div>
+
+                    <!-- RIGHT COLUMN - Booking Sidebar -->
+                    <aside class="detail-right">
+                        <div class="booking-sidebar">
+                            <div class="booking-sidebar-header">
+                                <div class="price-display">
+                                    <span class="price-amount" id="detailPrice">₹0</span>
+                                    <span class="price-per">/ night</span>
+                                </div>
+                                <div class="price-sub" id="detailPriceSub">+ taxes & fees may apply</div>
+                            </div>
+                            <div class="booking-sidebar-body">
+                                <div class="form-group">
+                                    <label><i class="fas fa-calendar-alt" aria-hidden="true"></i> Check In</label>
+                                    <input type="date" id="bookCheckIn" aria-label="Check-in date">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-calendar-alt" aria-hidden="true"></i> Check Out</label>
+                                    <input type="date" id="bookCheckOut" aria-label="Check-out date">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-users" aria-hidden="true"></i> Guests</label>
+                                    <input type="number" id="bookGuests" value="2" min="1" max="20" aria-label="Number of guests">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-bed" aria-hidden="true"></i> Room Type</label>
+                                    <select id="bookRoomType" aria-label="Select room type">
+                                        <option value="Standard">Standard Room</option>
+                                        <option value="Deluxe">Deluxe Room</option>
+                                        <option value="Suite">Suite</option>
+                                        <option value="Penthouse">Penthouse</option>
+                                    </select>
+                                </div>
+
+                                <!-- Booking For -->
+                                <div class="form-group booking-for-group">
+                                    <label><i class="fas fa-user-friends" aria-hidden="true"></i> Who is this booking for?</label>
+                                    <select id="bookingForType" onchange="toggleBookingForOther()" aria-label="Booking for">
+                                        <option value="self">Myself</option>
+                                        <option value="other">Someone else</option>
+                                    </select>
+                                </div>
+                                <div id="otherPersonFields" class="other-person-fields">
+                                    <div class="form-group">
+                                        <label><i class="fas fa-user" aria-hidden="true"></i> Guest Name</label>
+                                        <input type="text" id="otherPersonName" placeholder="Full name of the guest">
+                                    </div>
+                                    <div class="form-group">
+                                        <label><i class="fas fa-phone" aria-hidden="true"></i> Guest Phone</label>
+                                        <input type="tel" id="otherPersonPhone" placeholder="e.g. +91 9876543210">
+                                    </div>
+                                    <div class="form-group">
+                                        <label><i class="fas fa-envelope" aria-hidden="true"></i> Guest Email</label>
+                                        <input type="email" id="otherPersonEmail" placeholder="guest@email.com">
+                                    </div>
+                                    <p class="form-helper"><i class="fas fa-info-circle" aria-hidden="true"></i> The booking confirmation will also be sent to the guest</p>
+                                </div>
+
+                                <!-- Coupon -->
+                                <div class="form-group">
+                                    <label><i class="fas fa-tag" aria-hidden="true"></i> Coupon Code</label>
+                                    <div class="coupon-row">
+                                        <input type="text" id="couponCode" placeholder="Enter code" aria-label="Coupon code">
+                                        <button class="btn btn-sm btn-primary" id="applyCouponBtn" onclick="applyCoupon()">Apply</button>
+                                        <button type="button" class="btn btn-sm btn-secondary btn-icon" id="removeCouponBtn" onclick="removeCoupon()" aria-label="Remove coupon">✕</button>
+                                    </div>
+                                    <div id="couponStatus"></div>
+                                    <div id="couponBadge" class="coupon-badge-container"></div>
+                                </div>
+
+                                <!-- Price Breakdown -->
+                                <div class="price-breakdown">
+                                    <div class="price-row"><span>Room Price / Night</span><span id="pricePerNight">₹0</span></div>
+                                    <div class="price-row"><span>Nights</span><span id="nightsCount">0</span></div>
+                                    <div class="price-row total"><span>Total Amount</span><span id="totalAmount">₹0</span></div>
+                                </div>
+
+                                <button class="btn-book-now" onclick="bookNow()" aria-label="Confirm booking">
+                                    <i class="fas fa-bolt" aria-hidden="true"></i> Confirm Booking
+                                </button>
+                                <p class="secure-badge"><i class="fas fa-lock" aria-hidden="true"></i> Secure Booking • Instant Confirmation</p>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Booking Confirmation Modal -->
+    <div class="modal" id="bookingModal" role="dialog" aria-modal="true" aria-labelledby="bookingModalTitle">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('bookingModal')" aria-label="Close">&times;</button>
+            <div class="modal-body">
+                <i class="fas fa-check-circle success-icon" aria-hidden="true"></i>
+                <h2 id="bookingModalTitle">Booking Confirmed!</h2>
+                <p class="modal-helper">Your booking has been confirmed instantly.</p>
+                <div id="bookingDetails" class="invoice-receipt"></div>
+                <button class="btn btn-primary" onclick="closeModal('bookingModal')">Done</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="modalOverlay"></div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()" role="dialog" aria-modal="true">
+        <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close fullscreen view"><i class="fas fa-times"></i></button>
+        <img id="lightboxImg" src="" alt="Hotel image fullscreen view">
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>BookMyHotel<span class="logo-dot">.</span></h3>
+                    <p>Your trusted platform for hotel and home bookings across India.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="hotels.html">Browse Hotels</a></li>
+                        <li><a href="my-bookings.html">My Bookings</a></li>
+                        <li><a href="#">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Cancellation Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 BookMyHotel. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="js/firebase-init.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

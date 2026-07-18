@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#1A2B4C">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="Manage your hotel pricing, inventory and bookings - BookMyHotel">
+    <title>Hotel Manager - BookMyHotel</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .manage-panel { padding: 40px 0; }
+        .manage-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 30px; }
+        .manage-header h1 { font-size: 28px; font-weight: 800; }
+
+        .manage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+
+        .manage-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-border);
+            overflow: hidden;
+        }
+
+        .manage-card-header {
+            padding: 18px 22px;
+            background: var(--gray-light);
+            border-bottom: 1px solid var(--gray-border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--primary);
+        }
+
+        .manage-card-header i { font-size: 18px; }
+
+        .manage-card-body { padding: 22px; }
+
+        .manage-card.full-width { grid-column: 1 / -1; }
+
+        /* Hotel Selector */
+        .hotel-selector-bar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 18px 22px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-border);
+            margin-bottom: 25px;
+        }
+
+        .hotel-selector-bar label {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--dark);
+            white-space: nowrap;
+        }
+
+        .hotel-selector-bar select {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 14px;
+            border: 2px solid var(--gray-border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            outline: none;
+            font-family: var(--font);
+            background: var(--gray-light);
+        }
+
+        .hotel-selector-bar select:focus { border-color: var(--primary); }
+
+        /* Info Rows */
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--gray-border);
+            font-size: 14px;
+        }
+
+        .info-row:last-child { border-bottom: none; }
+        .info-row .label { color: var(--gray); font-weight: 500; }
+        .info-row .value { font-weight: 600; color: var(--dark); }
+
+        .badge-manage {
+            display: inline-flex;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-manage.active { background: #E8F5E9; color: #276749; }
+        .badge-manage.inactive { background: #FED7D7; color: #C53030; }
+
+        /* Rate Management */
+        .rate-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .rate-card {
+            background: var(--gray-light);
+            border-radius: var(--radius-sm);
+            padding: 18px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .rate-card:hover { border-color: var(--primary); }
+        .rate-card.selected { border-color: var(--secondary); background: rgba(212, 175, 55, 0.06); }
+
+        .rate-card .room-type { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+        .rate-card .room-multiplier { font-size: 12px; color: var(--gray); margin-bottom: 8px; }
+        .rate-card .room-price { font-size: 22px; font-weight: 800; color: var(--primary); }
+
+        .rate-card .room-price small { font-size: 12px; font-weight: 400; color: var(--gray); }
+
+        /* Price Calculator */
+        .calc-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 14px;
+            border-bottom: 1px solid var(--gray-border);
+        }
+
+        .calc-row.total {
+            border-bottom: none;
+            border-top: 2px solid var(--primary);
+            margin-top: 8px;
+            padding-top: 14px;
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .calc-row .calc-label { color: var(--gray); }
+        .calc-row .calc-value { font-weight: 600; }
+
+        /* Date Inputs */
+        .date-range {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .date-range .form-group { flex: 1; min-width: 140px; margin-bottom: 0; }
+
+        .date-range input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid var(--gray-border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            outline: none;
+            font-family: var(--font);
+            background: var(--gray-light);
+        }
+
+        .date-range input:focus { border-color: var(--primary); }
+
+        /* Override Price */
+        .price-override-row {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .price-override-row .form-group { flex: 1; min-width: 120px; margin-bottom: 0; }
+
+        .price-override-row input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid var(--gray-border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            outline: none;
+            font-family: var(--font);
+            background: var(--gray-light);
+        }
+
+        .price-override-row input:focus { border-color: var(--primary); }
+
+        .price-override-row .btn { padding: 10px 24px; }
+
+        .price-display-large {
+            font-size: 42px;
+            font-weight: 900;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .price-sub {
+            font-size: 16px;
+            color: var(--gray);
+            font-weight: 400;
+        }
+
+        /* Guest & Capacities */
+        .guest-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+        }
+
+        .guest-stat {
+            text-align: center;
+            padding: 15px;
+            background: var(--gray-light);
+            border-radius: var(--radius-sm);
+        }
+
+        .guest-stat .number { font-size: 24px; font-weight: 800; color: var(--primary); }
+        .guest-stat .label { font-size: 12px; color: var(--gray); margin-top: 4px; }
+
+        .manage-tabs {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 25px;
+            background: var(--gray-light);
+            border-radius: var(--radius);
+            padding: 4px;
+        }
+
+        .manage-tab-btn {
+            flex: 1;
+            padding: 12px 18px;
+            border: none;
+            background: transparent;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--gray);
+            font-family: var(--font);
+            border-radius: var(--radius-sm);
+            white-space: nowrap;
+        }
+
+        .manage-tab-btn:hover { color: var(--primary); background: rgba(108,60,248,0.04); }
+
+        .manage-tab-btn.active {
+            color: var(--primary);
+            background: var(--white);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .manage-tab-content { display: none; }
+        .manage-tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+        .actions-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 992px) {
+            .manage-grid { grid-template-columns: 1fr; }
+            .rate-card-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 480px) {
+            .rate-card-grid { grid-template-columns: 1fr; }
+            .price-display-large { font-size: 30px; }
+        }
+
+        .no-hotel-msg {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray);
+        }
+
+        .no-hotel-msg i { font-size: 48px; color: var(--primary-light); margin-bottom: 15px; display: block; }
+
+        .change-badge {
+            display: inline-flex;
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .change-badge.up { background: #E8F5E9; color: #276749; }
+        .change-badge.down { background: #FED7D7; color: #C53030; }
+        .change-badge.same { background: var(--gray-light); color: var(--gray); }
+
+        .inventory-quick {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+        }
+
+        .inv-item {
+            text-align: center;
+            padding: 12px;
+            background: var(--gray-light);
+            border-radius: var(--radius-sm);
+        }
+
+        .inv-item .inv-number { font-size: 20px; font-weight: 800; color: var(--primary); }
+        .inv-item .inv-label { font-size: 11px; color: var(--gray); margin-top: 4px; }
+
+        /* Check-in/Checkout Modal Styles */
+        .checkin-form-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .checkin-form-row .form-group {
+            flex: 1;
+            min-width: 120px;
+        }
+        .checkin-form-row .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray);
+            margin-bottom: 4px;
+        }
+        .checkin-form-row .form-group input,
+        .checkin-form-row .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid var(--gray-border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            outline: none;
+            font-family: var(--font);
+            background: var(--gray-light);
+        }
+        .checkin-form-row .form-group input:focus,
+        .checkin-form-row .form-group select:focus {
+            border-color: var(--primary);
+        }
+        .booking-summary-box {
+            background: var(--gray-light);
+            border-radius: var(--radius-sm);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary);
+        }
+        .booking-summary-box p {
+            margin: 4px 0;
+            font-size: 14px;
+            color: var(--dark);
+        }
+
+        /* Admin Table Scroll */
+        .admin-table-container {
+            overflow-x: auto;
+        }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .admin-table th,
+        .admin-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-border);
+            white-space: nowrap;
+        }
+        .admin-table th {
+            background: var(--gray-light);
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .admin-table tr:hover td {
+            background: rgba(108,60,248,0.02);
+        }
+
+        /* Quick Actions for Bookings */
+        .booking-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .booking-actions .btn {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Mobile Responsive Improvements */
+        @media (max-width: 768px) {
+            .staff-action-btn {
+                font-size: 11px !important;
+                padding: 6px 10px !important;
+            }
+            .manage-tab-btn {
+                font-size: 11px;
+                padding: 10px 8px;
+                white-space: normal;
+                word-break: break-word;
+            }
+            .admin-table th, .admin-table td {
+                padding: 6px 8px;
+                font-size: 11px;
+            }
+            .admin-table-container {
+                margin: 0 -10px;
+                padding: 0 10px;
+            }
+            .hotel-selector-bar {
+                padding: 12px 14px;
+            }
+            .hotel-selector-bar select {
+                min-width: 140px;
+                font-size: 13px;
+            }
+            .manage-card-header {
+                padding: 12px 14px;
+                font-size: 14px;
+            }
+            .manage-card-body {
+                padding: 14px;
+            }
+            .price-display-large {
+                font-size: 30px;
+            }
+            .guest-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .inventory-quick {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 480px) {
+            .manage-tab-btn {
+                font-size: 10px;
+                padding: 8px 4px;
+            }
+            .admin-table th, .admin-table td {
+                padding: 4px 6px;
+                font-size: 10px;
+            }
+            .hotel-selector-bar select {
+                min-width: 100px;
+                font-size: 12px;
+            }
+            .rate-card-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .rate-card {
+                padding: 12px;
+            }
+            .rate-card .room-price {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">BookMyHotel<span class="logo-dot">.</span></a>
+                <nav class="nav-menu">
+                    <ul id="navLinks">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="hotels.html">Hotels</a></li>
+                    </ul>
+                    <ul id="navAuth"></ul>
+                </nav>
+                <div class="hamburger"><span></span><span></span><span></span></div>
+            </div>
+        </div>
+    </header>
+
+    <section class="page-banner">
+        <div class="container">
+            <h1>Hotel Manager</h1>
+            <p>Manage rates, inventory, and dynamic pricing for your property</p>
+        </div>
+    </section>
+
+    <section class="manage-panel">
+        <div class="container">
+            <!-- Hotel Selector -->
+            <div class="hotel-selector-bar">
+                <label><i class="fas fa-hotel" style="color:var(--primary);"></i> Select Hotel:</label>
+                <select id="manageHotelSelect" onchange="loadManageHotel(this.value)">
+                    <option value="">-- Select a hotel --</option>
+                </select>
+                <div id="staffHotelBadge" style="display:none;font-size:12px;font-weight:700;color:var(--gray);white-space:nowrap;">
+                    <i class="fas fa-user-tie" style="color:var(--primary);"></i> Staff: <span id="staffHotelBadgeName">My Hotel</span>
+                </div>
+                <button class="btn btn-sm btn-secondary" onclick="location.href='partner.html'"><i class="fas fa-arrow-left"></i> Partner Dashboard</button>
+            </div>
+
+            <!-- No Hotel Message -->
+            <div id="noHotelMsg" class="no-hotel-msg">
+                <i class="fas fa-hotel"></i>
+                <h3>Select a hotel to manage</h3>
+                <p>Choose a hotel from the dropdown above to view and update pricing, inventory, and availability.</p>
+            </div>
+
+            <!-- Manage Content (hidden initially) -->
+            <div id="manageContent" style="display:none;">
+                <!-- Staff Info Bar -->
+                <div class="hotel-selector-bar" style="background: linear-gradient(135deg, #1A2B4C 0%, #0F1C34 100%); color: white; border: none;">
+                    <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap; width:100%;">
+                        <div style="background:rgba(255,255,255,0.15); padding:10px 18px; border-radius:12px; text-align:center;">
+                            <div style="font-size:11px; opacity:0.8; text-transform:uppercase; letter-spacing:0.5px;">Hotel ID</div>
+                            <div style="font-size:18px; font-weight:800; font-family:monospace; letter-spacing:1px;" id="staffHotelIdDisplay">-</div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.15); padding:10px 18px; border-radius:12px; text-align:center;">
+                            <div style="font-size:11px; opacity:0.8; text-transform:uppercase; letter-spacing:0.5px;">Hotel Name</div>
+                            <div style="font-size:16px; font-weight:700;" id="staffHotelNameDisplay">-</div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.15); padding:10px 18px; border-radius:12px; text-align:center;">
+                            <div style="font-size:11px; opacity:0.8; text-transform:uppercase; letter-spacing:0.5px;">Login ID (Email)</div>
+                            <div style="font-size:14px; font-weight:600; font-family:monospace;" id="staffHotelLoginIdDisplay">-</div>
+                        </div>
+                        <div style="margin-left:auto; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                            <span style="font-size:12px; opacity:0.8;"><i class="fas fa-user-tie"></i> Staff Mode</span>
+                            <button class="btn btn-sm btn-secondary staff-action-btn" onclick="location.href='profile.html'" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:white;"><i class="fas fa-user"></i> Profile</button>
+                            <button class="btn btn-sm btn-secondary staff-action-btn" onclick="handleLogout()" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:white;"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabs - Bookings First -->
+                <div class="manage-tabs">
+                    <button class="manage-tab-btn active" onclick="switchManageTab('history')">📋 Bookings</button>
+                    <button class="manage-tab-btn" onclick="switchManageTab('rates')">💰 Rates</button>
+                    <button class="manage-tab-btn" onclick="switchManageTab('availability')">🛏️ Rooms</button>
+                    <button class="manage-tab-btn" onclick="switchManageTab('details')">ℹ️ Info</button>
+                </div>
+
+                <!-- TAB: Booking History (First Tab) -->
+                <div class="manage-tab-content active" id="tab-manage-history">
+                    <div class="manage-card full-width">
+                        <div class="manage-card-header"><i class="fas fa-history"></i> Booking History for this Hotel</div>
+                        <div class="manage-card-body">
+                            <div class="admin-table-container">
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Customer</th>
+                                            <th>Room</th>
+                                            <th>Check In</th>
+                                            <th>Check Out</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="mgrBookingsTable"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB: Rates & Pricing -->
+                <div class="manage-tab-content" id="tab-manage-rates">
+                    <div class="manage-grid">
+                        <!-- Rate Card Selector -->
+                        <div class="manage-card">
+                            <div class="manage-card-header"><i class="fas fa-bed"></i> Room Types & Rates</div>
+                            <div class="manage-card-body">
+                                <p class="helper-text" style="margin-bottom:15px;">Select a room type to see the calculated price based on your dates.</p>
+                                <div class="rate-card-grid" id="roomTypeRates"></div>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Price Calculator -->
+                        <div class="manage-card">
+                            <div class="manage-card-header"><i class="fas fa-calculator"></i> Dynamic Price Calculator</div>
+                            <div class="manage-card-body">
+                                <div class="date-range" style="margin-bottom:15px;">
+                                    <div class="form-group">
+                                        <label style="font-size:12px;font-weight:600;color:var(--gray);display:block;margin-bottom:4px;"><i class="fas fa-calendar-alt"></i> Check In</label>
+                                        <input type="date" id="mgrCheckIn" onchange="recalcManagePrice()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="font-size:12px;font-weight:600;color:var(--gray);display:block;margin-bottom:4px;"><i class="fas fa-calendar-alt"></i> Check Out</label>
+                                        <input type="date" id="mgrCheckOut" onchange="recalcManagePrice()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="font-size:12px;font-weight:600;color:var(--gray);display:block;margin-bottom:4px;"><i class="fas fa-users"></i> Guests</label>
+                                        <input type="number" id="mgrGuests" value="2" min="1" max="20" onchange="recalcManagePrice()">
+                                    </div>
+                                </div>
+
+                                <div id="priceResult">
+                                    <div style="text-align:center;padding:20px 0;">
+                                        <div class="price-display-large" id="mgrTotalPrice">₹0</div>
+                                        <div class="price-sub" id="mgrPriceSub">Select dates and room type</div>
+                                    </div>
+                                    <div id="priceBreakdown" style="display:none;">
+                                        <div class="calc-row"><span class="calc-label"><i class="fas fa-bed"></i> Room Type</span><span class="calc-value" id="mgrCalcRoomType">Standard</span></div>
+                                        <div class="calc-row"><span class="calc-label"><i class="fas fa-tag"></i> Base Price / Night</span><span class="calc-value" id="mgrCalcBasePrice">₹0</span></div>
+                                        <div class="calc-row"><span class="calc-label"><i class="fas fa-multiply"></i> Room Multiplier</span><span class="calc-value" id="mgrCalcMultiplier">1.0x</span></div>
+                                        <div class="calc-row"><span class="calc-label"><i class="fas fa-moon"></i> Nights</span><span class="calc-value" id="mgrCalcNights">0</span></div>
+                                        <div class="calc-row total"><span class="calc-label">Total Amount</span><span class="calc-value" id="mgrCalcTotal">₹0</span></div>
+                                    </div>
+
+                                    <!-- Override Price -->
+                                    <div class="price-override-row">
+                                        <div class="form-group">
+                                            <label style="font-size:12px;font-weight:600;color:var(--gray);display:block;margin-bottom:4px;"><i class="fas fa-pen"></i> Override Nightly Rate (₹)</label>
+                                            <input type="number" id="mgrOverridePrice" placeholder="Custom price" onchange="recalcManagePrice()">
+                                        </div>
+                                        <button class="btn btn-sm btn-primary" onclick="applyOverride()"><i class="fas fa-check"></i> Apply Preview</button>
+                                        <button class="btn btn-sm btn-secondary" onclick="clearOverride()"><i class="fas fa-undo"></i> Reset</button>
+                                    </div>
+                                    <p class="helper-text" style="margin-top:10px;"><i class="fas fa-info-circle"></i> Override price replaces the base price per night. All calculations update automatically.</p>
+                                </div>
+
+                                <div class="actions-bar">
+                                    <button class="btn btn-primary" onclick="saveManageChanges()"><i class="fas fa-save"></i> Save Changes</button>
+                                    <button class="btn btn-secondary" onclick="loadManageHotel(document.getElementById('manageHotelSelect').value)"><i class="fas fa-sync"></i> Reset to Original</button>
+                                    <span style="font-size:12px;color:var(--gray);font-weight:600;display:block;width:100%;margin-top:6px;">
+                                        <i class="fas fa-bell" style="color:var(--primary);"></i> Pricing/inventory/timings change ke baad yahin "Updated!" notification aayegi.
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Revenue Summary -->
+                        <div class="manage-card full-width">
+                            <div class="manage-card-header"><i class="fas fa-chart-line"></i> Revenue Estimate</div>
+                            <div class="manage-card-body">
+                                <div class="guest-grid">
+                                    <div class="guest-stat"><div class="number" id="mgrEstMonthly">₹0</div><div class="label">Est. Monthly (30 days)</div></div>
+                                    <div class="guest-stat"><div class="number" id="mgrEstWeekly">₹0</div><div class="label">Est. Weekly (7 days)</div></div>
+                                    <div class="guest-stat"><div class="number" id="mgrEstDaily">₹0</div><div class="label">Per Night (current)</div></div>
+                                    <div class="guest-stat"><div class="number" id="mgrEstBookings">0</div><div class="label">Total Bookings</div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB: Availability -->
+                <div class="manage-tab-content" id="tab-manage-availability">
+                    <div class="manage-grid">
+                        <div class="manage-card">
+                            <div class="manage-card-header"><i class="fas fa-door-open"></i> Room Inventory</div>
+                            <div class="manage-card-body">
+                                <div class="inventory-quick">
+                                    <div class="inv-item"><div class="inv-number" id="mgrTotalRooms">0</div><div class="inv-label">Total Rooms</div></div>
+                                    <div class="inv-item"><div class="inv-number" id="mgrAvailableRooms">0</div><div class="inv-label">Available</div></div>
+                                    <div class="inv-item"><div class="inv-number" id="mgrBookedRooms">0</div><div class="inv-label">Booked</div></div>
+                                    <div class="inv-item"><div class="inv-number" id="mgrOccupancyPct">0%</div><div class="inv-label">Occupancy</div></div>
+                                </div>
+                                <div style="margin-top:20px;">
+                                    <div class="form-row">
+                                        <div class="form-group"><label>Total Rooms</label><input type="number" id="mgrEditTotalRooms" min="1"></div>
+                                        <div class="form-group"><label>Available Rooms</label><input type="number" id="mgrEditAvailableRooms" min="0"></div>
+                                    </div>
+                                    <button class="btn btn-primary" onclick="updateManageInventory()" style="margin-top:10px;"><i class="fas fa-save"></i> Update Inventory</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="manage-card">
+                            <div class="manage-card-header"><i class="fas fa-calendar-check"></i> Current Status</div>
+                            <div class="manage-card-body">
+                                <div class="info-row"><span class="label">Status</span><span class="value" id="mgrStatusBadge">Active</span></div>
+                                <div class="info-row"><span class="label">Featured</span><span class="value" id="mgrFeaturedBadge">No</span></div>
+                                <div class="info-row"><span class="label">Check In Time</span><span class="value" id="mgrCheckInTime">14:00</span></div>
+                                <div class="info-row"><span class="label">Check Out Time</span><span class="value" id="mgrCheckOutTime">11:00</span></div>
+                                <div class="info-row"><span class="label">Cancellation</span><span class="value" id="mgrCancellation">Free</span></div>
+                                <div class="info-row"><span class="label">Refund Policy</span><span class="value" id="mgrRefund">Full</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB: Hotel Info -->
+                <div class="manage-tab-content" id="tab-manage-details">
+                    <div class="manage-grid">
+                        <div class="manage-card full-width">
+                            <div class="manage-card-header"><i class="fas fa-info-circle"></i> Hotel Profile</div>
+                            <div class="manage-card-body">
+                                <div class="form-row">
+                                    <div class="form-group"><label>Hotel Name</label><input type="text" id="mgrEditName"></div>
+                                    <div class="form-group"><label>City</label><input type="text" id="mgrEditCity"></div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group"><label>State</label><input type="text" id="mgrEditState"></div>
+                                    <div class="form-group"><label>Stars</label><select id="mgrEditStars"><option value="3">3★</option><option value="4">4★</option><option value="5">5★</option></select></div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group"><label>Rating (1-5)</label><input type="number" id="mgrEditRating" min="1" max="5" step="0.1"></div>
+                                    <div class="form-group"><label>Status</label><select id="mgrEditStatus"><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+                                </div>
+                                <div class="form-group"><label>Image URL</label><input type="url" id="mgrEditImage" placeholder="https://..."></div>
+                                <div class="form-group"><label>Description</label><textarea id="mgrEditDesc" rows="3"></textarea></div>
+                                <div class="form-group"><label>Amenities (comma separated)</label><input type="text" id="mgrEditAmenities" placeholder="Free WiFi, Pool, Gym"></div>
+                                <div class="form-row">
+                                    <div class="form-group"><label>Check In Time</label><input type="text" id="mgrEditCheckIn" value="14:00"></div>
+                                    <div class="form-group"><label>Check Out Time</label><input type="text" id="mgrEditCheckOut" value="11:00"></div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group"><label>Cancellation Policy</label><input type="text" id="mgrEditCancellation" placeholder="Free cancellation"></div>
+                                    <div class="form-group"><label>Refund Policy</label><input type="text" id="mgrEditRefund" placeholder="Full refund"></div>
+                                </div>
+                                <div class="form-group checkbox-group">
+                                    <label><input type="checkbox" id="mgrEditFeatured"> Show on homepage (Featured)</label>
+                                </div>
+                                <button class="btn btn-primary" onclick="saveManageHotelProfile()" style="margin-top:10px;"><i class="fas fa-save"></i> Save Profile</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Check-In Modal -->
+    <div class="modal" id="checkinModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('checkinModal')">&times;</span>
+            <div class="modal-body">
+                <i class="fas fa-sign-in-alt" style="font-size: 40px; color: var(--primary); margin-bottom: 10px;"></i>
+                <h2>Check-In Guest</h2>
+                <p class="modal-helper" style="margin-bottom: 15px;">Assign room number and confirm check-in</p>
+                
+                <div class="booking-summary-box" id="checkinBookingSummary">
+                    <p><strong>Customer:</strong> <span id="checkinCustomerName">-</span></p>
+                    <p><strong>Room Type:</strong> <span id="checkinRoomType">-</span></p>
+                    <p><strong>Check In:</strong> <span id="checkinDate">-</span></p>
+                    <p><strong>Check Out:</strong> <span id="checkinCheckOut">-</span></p>
+                </div>
+
+                <div class="checkin-form-row">
+                    <div class="form-group" style="flex:2;">
+                        <label><i class="fas fa-door-open"></i> Room Number</label>
+                        <input type="text" id="checkinRoomInput" placeholder="e.g. Room 101, 201-A, Suite 5" style="font-weight:700;">
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label><i class="fas fa-bed"></i> Room Type</label>
+                        <select id="checkinRoomTypeSelect">
+                            <option value="Standard">Standard</option>
+                            <option value="Deluxe">Deluxe</option>
+                            <option value="Suite">Suite</option>
+                            <option value="Penthouse">Penthouse</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="display:flex;gap:10px;justify-content:center;margin-top:15px;">
+                    <button class="btn btn-primary" onclick="confirmCheckIn()" style="flex:1;">
+                        <i class="fas fa-check"></i> Confirm Check-In
+                    </button>
+                    <button class="btn btn-secondary" onclick="closeModal('checkinModal')" style="flex:0.5;">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Check-Out Confirmation Modal -->
+    <div class="modal" id="checkoutModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('checkoutModal')">&times;</span>
+            <div class="modal-body">
+                <i class="fas fa-sign-out-alt" style="font-size: 40px; color: var(--success); margin-bottom: 10px;"></i>
+                <h2>Check-Out Guest</h2>
+                <p class="modal-helper" style="margin-bottom: 15px;">Confirm check-out to complete this booking and free the room</p>
+                
+                <div class="booking-summary-box" id="checkoutBookingSummary">
+                    <p><strong>Customer:</strong> <span id="checkoutCustomerName">-</span></p>
+                    <p><strong>Room:</strong> <span id="checkoutRoomNumber">-</span></p>
+                    <p><strong>Check In:</strong> <span id="checkoutCheckIn">-</span></p>
+                    <p><strong>Check Out:</strong> <span id="checkoutCheckOut">-</span></p>
+                </div>
+                
+                <div style="display:flex;gap:10px;justify-content:center;margin-top:15px;">
+                    <button class="btn btn-success" onclick="confirmCheckOut()" style="flex:1;">
+                        <i class="fas fa-check"></i> Confirm Check-Out
+                    </button>
+                    <button class="btn btn-secondary" onclick="closeModal('checkoutModal')" style="flex:0.5;">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign Room Modal -->
+    <div class="modal" id="assignRoomModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('assignRoomModal')">&times;</span>
+            <div class="modal-body">
+                <i class="fas fa-door-open" style="font-size: 40px; color: var(--primary); margin-bottom: 10px;"></i>
+                <h2>Assign Room Number</h2>
+                <p class="modal-helper" style="margin-bottom: 15px;">Set or change room number for this booking</p>
+                
+                <div class="booking-summary-box" id="assignRoomSummary">
+                    <p><strong>Customer:</strong> <span id="assignRoomCustomer">-</span></p>
+                    <p><strong>Current Room:</strong> <span id="assignRoomCurrent">-</span></p>
+                </div>
+
+                <div class="form-group">
+                    <label style="font-size:12px;font-weight:600;color:var(--gray);display:block;margin-bottom:4px;"><i class="fas fa-door-open"></i> Room Number</label>
+                    <input type="text" id="assignRoomInput" placeholder="e.g. Room 101" style="font-weight:700;padding:12px 16px;border:2px solid var(--gray-border);border-radius:var(--radius-sm);width:100%;font-size:16px;">
+                </div>
+                
+                <div style="display:flex;gap:10px;justify-content:center;margin-top:15px;">
+                    <button class="btn btn-primary" onclick="confirmAssignRoom()" style="flex:1;">
+                        <i class="fas fa-save"></i> Save Room Number
+                    </button>
+                    <button class="btn btn-secondary" onclick="closeModal('assignRoomModal')" style="flex:0.5;">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Save Confirmation Modal -->
+    <div class="modal" id="manageSaveModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('manageSaveModal')">&times;</span>
+            <div class="modal-body">
+                <i class="fas fa-check-circle success-icon"></i>
+                <h2>Updated!</h2>
+                <p class="modal-helper" id="manageSaveMsg">Changes saved successfully.</p>
+                <button class="btn btn-primary" onclick="closeModal('manageSaveModal')">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancel Booking Confirmation Modal -->
+    <div class="modal" id="cancelBookingModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('cancelBookingModal')">&times;</span>
+            <div class="modal-body">
+                <i class="fas fa-exclamation-triangle" style="font-size: 40px; color: var(--danger); margin-bottom: 10px;"></i>
+                <h2>Cancel Booking?</h2>
+                <p class="modal-helper" style="margin-bottom: 15px;">This will mark the booking as cancelled and free the room.</p>
+                
+                <div class="booking-summary-box" id="cancelBookingSummary">
+                    <p><strong>Customer:</strong> <span id="cancelCustomerName">-</span></p>
+                    <p><strong>Room:</strong> <span id="cancelRoomNumber">-</span></p>
+                </div>
+                
+                <div style="display:flex;gap:10px;justify-content:center;margin-top:15px;">
+                    <button class="btn btn-danger" onclick="confirmCancelBooking()" style="flex:1;">
+                        <i class="fas fa-times"></i> Yes, Cancel Booking
+                    </button>
+                    <button class="btn btn-secondary" onclick="closeModal('cancelBookingModal')" style="flex:0.5;">
+                        No, Keep it
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay"></div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section"><h3>BookMyHotel<span class="logo-dot">.</span></h3><p>Hotel management & dynamic pricing platform.</p></div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul><li><a href="hotels.html">Browse Hotels</a></li><li><a href="partner.html">Partner Dashboard</a></li><li><a href="my-bookings.html">My Bookings</a></li></ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul><li><a href="#">Help Center</a></li><li><a href="#">Partner Support</a></li><li><a href="#">Terms</a></li></ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2026 BookMyHotel. All rights reserved.</p></div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="js/firebase-init.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+{
+  "rules": {
+    "users": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('type').val() === 'admin'",
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('type').val() === 'admin')",
+        ".write": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('type').val() === 'admin')"
+      }
+    },
+
+    "bookings": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      "$bookingId": {
+        ".validate": "newData.hasChildren(['userId', 'hotelId'])"
+      }
+    },
+
+    "hotels": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+
+    "partners": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+
+    "cities": {
+      ".read": true,
+      ".write": "auth != null"
+    }
+  }
+}

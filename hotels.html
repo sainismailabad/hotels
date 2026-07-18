@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#1A2B4C">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- ===== SEO ===== -->
+    <meta name="description" content="Browse and book hotels across India at best prices. Search by city, filter by price & rating, and book instantly with instant confirmation on BookMyHotel.">
+    <meta name="keywords" content="browse hotels, hotel listing, India hotels, book hotel online, hotel deals, best hotel prices, hotel search">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://bookmyhotel.com/hotels.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="BookMyHotel">
+    <meta property="og:title" content="Browse Hotels - BookMyHotel | Find Your Perfect Stay">
+    <meta property="og:description" content="Browse and book hotels across India at best prices. Filter by city, price, rating and more.">
+    <meta property="og:url" content="https://bookmyhotel.com/hotels.html">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Browse Hotels - BookMyHotel">
+    <meta name="twitter:description" content="Browse and book hotels across India. Find your perfect stay.">
+    <title>Browse Hotels - BookMyHotel | Find Your Perfect Stay</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        /* ===== OYO-STYLE HOTELS PAGE ===== */
+        .hotels-hero {
+            background: linear-gradient(135deg, #0F1C34 0%, #1A2B4C 50%, #13223A 100%);
+            padding: 40px 0 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hotels-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1600') center/cover no-repeat;
+            opacity: 0.04;
+        }
+        .hotels-hero-content { position: relative; z-index: 2; }
+        .hotels-hero h1 { color: #fff; font-size: 36px; font-weight: 900; margin-bottom: 6px; }
+        .hotels-hero p { color: rgba(255,255,255,0.7); font-size: 16px; margin-bottom: 24px; }
+        
+        /* OYO Search Bar */
+        .oyo-search-bar {
+            display: flex;
+            gap: 0;
+            background: #fff;
+            border-radius: 60px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 900px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+        .oyo-search-item {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 20px;
+            border-right: 1px solid rgba(0,0,0,0.06);
+            min-width: 140px;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+        .oyo-search-item:hover { background: #f8f9fa; }
+        .oyo-search-item:last-child { border-right: none; flex: none; }
+        .oyo-search-item i { color: var(--primary); font-size: 16px; }
+        .oyo-search-item input, .oyo-search-item select {
+            border: none; background: transparent; font-size: 14px;
+            width: 100%; outline: none; font-family: inherit; color: var(--dark);
+        }
+        .oyo-search-item input::placeholder { color: #999; }
+        .oyo-search-btn {
+            background: var(--gradient-accent); color: #fff; border: none;
+            padding: 14px 32px; font-weight: 700; font-size: 15px;
+            cursor: pointer; transition: 0.3s ease; white-space: nowrap;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .oyo-search-btn:hover { filter: brightness(1.1); }
+
+        /* Quick Category Chips */
+        .category-chips {
+            display: flex; gap: 10px; flex-wrap: wrap;
+            margin-top: 24px; justify-content: center;
+        }
+        .chip {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 18px; border-radius: 50px;
+            background: rgba(255,255,255,0.1); color: #fff;
+            font-size: 13px; font-weight: 600; cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.15);
+            transition: 0.3s ease; backdrop-filter: blur(10px);
+        }
+        .chip:hover, .chip.active { background: var(--accent); color: var(--dark); border-color: var(--accent); }
+        .chip i { font-size: 14px; }
+
+        /* OYO Hotel Grid */
+        .hotels-page-body { padding: 30px 0 60px; background: #f5f5f5; }
+        .hotels-page-body.dark-mode { background: #1a1a1a; }
+        
+        .hotels-toolbar {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+        }
+        .hotels-toolbar .result-count { font-weight: 700; color: var(--dark); font-size: 15px; }
+        .hotels-toolbar .result-count span { color: var(--accent); }
+        .hotels-toolbar .view-options { display: flex; gap: 8px; align-items: center; }
+        .hotels-toolbar select {
+            padding: 8px 14px; border: 2px solid #e0e0e0; border-radius: 10px;
+            font-size: 13px; font-weight: 600; background: #fff; outline: none;
+            font-family: inherit; cursor: pointer;
+        }
+
+        /* OYO Hotel Card - Premium Design */
+        .oyo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+        }
+        .oyo-card {
+            background: #fff; border-radius: 16px; overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            transition: all 0.3s ease; cursor: pointer;
+            border: 1px solid rgba(0,0,0,0.04);
+            position: relative;
+        }
+        .oyo-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+        }
+        .oyo-card-image-wrap {
+            position: relative; height: 210px; overflow: hidden;
+            background: #e8e8e8;
+        }
+        .oyo-card-image-wrap img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .oyo-card:hover .oyo-card-image-wrap img { transform: scale(1.08); }
+        
+        /* Multi-image dots */
+        .image-dots {
+            position: absolute; bottom: 12px; left: 50%;
+            transform: translateX(-50%); display: flex; gap: 5px;
+            z-index: 3;
+        }
+        .image-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: rgba(255,255,255,0.5); cursor: pointer;
+            transition: 0.2s ease;
+        }
+        .image-dot.active { background: #fff; width: 18px; border-radius: 4px; }
+        
+        /* Image nav arrows */
+        .img-nav {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 32px; height: 32px; border-radius: 50%;
+            background: rgba(255,255,255,0.9); border: none;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; transition: 0.3s ease;
+            z-index: 3; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            font-size: 14px; color: var(--dark);
+        }
+        .oyo-card:hover .img-nav { opacity: 1; }
+        .img-nav.prev { left: 10px; }
+        .img-nav.next { right: 10px; }
+        .img-nav:hover { background: #fff; transform: translateY(-50%) scale(1.1); }
+
+        .oyo-card-badge {
+            position: absolute; top: 12px; left: 12px;
+            background: var(--gradient-primary); color: #fff;
+            padding: 4px 14px; border-radius: 50px; font-size: 12px;
+            font-weight: 700; z-index: 3; backdrop-filter: blur(10px);
+        }
+        .oyo-card-discount {
+            position: absolute; top: 12px; right: 12px;
+            background: var(--danger); color: #fff;
+            padding: 4px 12px; border-radius: 50px; font-size: 11px;
+            font-weight: 700; z-index: 3;
+        }
+        .oyo-card-fav {
+            position: absolute; top: 12px; right: 12px;
+            width: 34px; height: 34px; border-radius: 50%;
+            background: rgba(255,255,255,0.9); border: none;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 3; font-size: 16px;
+            transition: 0.2s ease; color: #999;
+        }
+        .oyo-card-fav:hover { color: var(--danger); transform: scale(1.1); }
+        .oyo-card-fav.liked { color: var(--danger); }
+
+        .oyo-card-body { padding: 16px 18px; }
+        .oyo-card-body .hotel-name {
+            font-size: 16px; font-weight: 700; color: var(--dark);
+            margin-bottom: 3px; display: -webkit-box; -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .oyo-card-body .hotel-location {
+            font-size: 13px; color: #888; margin-bottom: 8px;
+            display: flex; align-items: center; gap: 4px;
+        }
+        .oyo-card-body .hotel-location i { font-size: 12px; color: #aaa; }
+        .oyo-card-body .hotel-meta {
+            display: flex; align-items: center; gap: 12px; margin-bottom: 10px;
+        }
+        .oyo-card-body .hotel-rating {
+            display: inline-flex; align-items: center; gap: 4px;
+            background: #1A2B4C; color: #fff; padding: 2px 10px;
+            border-radius: 6px; font-size: 12px; font-weight: 700;
+        }
+        .oyo-card-body .hotel-rating i { font-size: 10px; }
+        .oyo-card-body .hotel-reviews { font-size: 12px; color: #888; }
+        .oyo-card-body .hotel-amenities {
+            display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px;
+        }
+        .oyo-card-body .hotel-amenities span {
+            font-size: 11px; color: #666; background: #f0f0f0;
+            padding: 3px 10px; border-radius: 50px;
+        }
+        .oyo-card-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 18px; border-top: 1px solid rgba(0,0,0,0.05);
+        }
+        .oyo-card-footer .price {
+            font-size: 20px; font-weight: 800; color: var(--primary);
+        }
+        .oyo-card-footer .price small {
+            font-size: 12px; font-weight: 400; color: #999;
+        }
+        .oyo-card-footer .book-btn {
+            background: var(--gradient-accent); color: #fff;
+            border: none; padding: 8px 20px; border-radius: 8px;
+            font-weight: 700; font-size: 13px; cursor: pointer;
+            transition: 0.3s ease;
+        }
+        .oyo-card-footer .book-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
+
+        /* Image Upload/Manager Modal */
+        .image-manager { padding: 20px 0; }
+        .image-manager .current-images {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px; margin: 15px 0;
+        }
+        .image-manager .img-item {
+            position: relative; border-radius: 10px; overflow: hidden;
+            aspect-ratio: 1; border: 2px solid transparent; cursor: pointer;
+            transition: 0.2s ease;
+        }
+        .image-manager .img-item:hover { border-color: var(--accent); }
+        .image-manager .img-item img { width: 100%; height: 100%; object-fit: cover; }
+        .image-manager .img-item .del-img {
+            position: absolute; top: 4px; right: 4px;
+            width: 24px; height: 24px; border-radius: 50%;
+            background: rgba(255,71,87,0.9); color: #fff; border: none;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 12px; opacity: 0; transition: 0.2s ease;
+        }
+        .image-manager .img-item:hover .del-img { opacity: 1; }
+        .image-manager .img-item.main { border-color: var(--accent); }
+        .image-manager .img-item .main-badge {
+            position: absolute; bottom: 4px; left: 4px;
+            background: var(--accent); color: var(--dark); padding: 2px 8px;
+            border-radius: 4px; font-size: 9px; font-weight: 700;
+        }
+        .image-manager .add-img-area {
+            border: 2px dashed #ddd; border-radius: 10px;
+            padding: 20px; text-align: center; cursor: pointer;
+            transition: 0.3s ease; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 8px;
+            min-height: 120px; background: #fafafa;
+        }
+        .image-manager .add-img-area:hover {
+            border-color: var(--accent); background: rgba(212,175,55,0.05);
+        }
+        .image-manager .add-img-area i { font-size: 32px; color: #ccc; }
+        .image-manager .add-img-area p { font-size: 13px; color: #999; }
+        .image-manager .img-url-input {
+            display: flex; gap: 8px; align-items: center; margin-top: 10px;
+        }
+        .image-manager .img-url-input input {
+            flex: 1; padding: 10px 14px; border: 2px solid #ddd;
+            border-radius: 10px; font-size: 14px; outline: none;
+        }
+        .image-manager .img-url-input input:focus { border-color: var(--accent); }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .oyo-search-bar { border-radius: 20px; }
+            .oyo-search-item { border-right: none; border-bottom: 1px solid #eee; min-width: 50%; }
+            .oyo-search-item:last-child { border-bottom: none; }
+            .oyo-search-btn { width: 100%; justify-content: center; border-radius: 0; }
+            .oyo-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+            .hotels-hero h1 { font-size: 28px; }
+        }
+        @media (max-width: 768px) {
+            .hotels-hero { padding: 24px 0 40px; }
+            .oyo-search-item { min-width: 100%; padding: 12px 16px; }
+            .oyo-grid { grid-template-columns: 1fr; gap: 16px; }
+            .oyo-card-image-wrap { height: 180px; }
+            .hotels-hero h1 { font-size: 24px; }
+            .hotels-hero p { font-size: 14px; }
+            .category-chips { gap: 8px; }
+            .chip { padding: 6px 14px; font-size: 12px; }
+        }
+        @media (max-width: 480px) {
+            .oyo-card-image-wrap { height: 160px; }
+            .oyo-card-body { padding: 12px 14px; }
+            .oyo-card-footer { padding: 10px 14px; }
+            .oyo-card-body .hotel-name { font-size: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">BookMyHotel<span class="logo-dot">.</span></a>
+                <nav class="nav-menu">
+                    <ul id="navLinks">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="hotels.html" class="active">Hotels</a></li>
+                    </ul>
+                    <ul id="navAuth"></ul>
+                </nav>
+                <div class="hamburger"><span></span><span></span><span></span></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- OYO-Style Hero with Search -->
+    <section class="hotels-hero">
+        <div class="container">
+            <div class="hotels-hero-content">
+                <h1>Find your perfect stay</h1>
+                <p>Search hotels, homes & unique stays across India</p>
+                
+                <div class="oyo-search-bar">
+                    <div class="oyo-search-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <input type="text" id="filterLocation" placeholder="Search city or area..." value="">
+                    </div>
+                    <div class="oyo-search-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <input type="date" id="filterCheckIn">
+                    </div>
+                    <div class="oyo-search-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <input type="date" id="filterCheckOut">
+                    </div>
+                    <div class="oyo-search-item" style="border-right:none;">
+                        <i class="fas fa-users"></i>
+                        <select id="filterGuests">
+                            <option value="1">1 Guest</option>
+                            <option value="2" selected>2 Guests</option>
+                            <option value="3">3 Guests</option>
+                            <option value="4">4+ Guests</option>
+                        </select>
+                    </div>
+                    <button class="oyo-search-btn" onclick="applyFilters()">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+
+                <div class="category-chips">
+                    <span class="chip active" onclick="filterByCategory('all',this)"><i class="fas fa-th-large"></i> All</span>
+                    <span class="chip" onclick="filterByCategory('budget',this)"><i class="fas fa-wallet"></i> Budget</span>
+                    <span class="chip" onclick="filterByCategory('luxury',this)"><i class="fas fa-crown"></i> Luxury</span>
+                    <span class="chip" onclick="filterByCategory('beach',this)"><i class="fas fa-umbrella-beach"></i> Beach</span>
+                    <span class="chip" onclick="filterByCategory('mountain',this)"><i class="fas fa-mountain"></i> Mountain</span>
+                    <span class="chip" onclick="filterByCategory('couple',this)"><i class="fas fa-heart"></i> Couple Friendly</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hotels Listing Body -->
+    <section class="hotels-page-body">
+        <div class="container">
+            <div class="hotels-toolbar">
+                <div class="result-count">Showing <span id="resultsCount">0</span> hotels</div>
+                <div class="view-options">
+                    <label style="font-size:13px;color:#888;font-weight:600;">Sort:</label>
+                    <select id="sortSelect" onchange="sortHotels()">
+                        <option value="name">Name</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="rating">Rating</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Offers (colorful cards) -->
+            <div style="margin: 10px 0 26px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+                    <h2 style="margin:0;font-size:20px;color:var(--primary);font-weight:900;">Hot Offers</h2>
+                    <div style="font-size:13px;color:#888;font-weight:600;">Active & valid coupons</div>
+                </div>
+                <div id="offersCardsHotelsPage" class="offers-cards-grid" style="margin-top:14px;"></div>
+            </div>
+
+            <div class="oyo-grid" id="hotelList"></div>
+
+        </div>
+    </section>
+
+    <!-- Image Gallery Modal -->
+    <div class="modal" id="imageGalleryModal">
+        <div class="modal-content" style="max-width:700px;">
+            <span class="modal-close" onclick="closeModal('imageGalleryModal')">&times;</span>
+            <div class="modal-body">
+                <h2 id="galleryHotelName">Hotel Images</h2>
+                <div class="image-manager">
+                    <div class="current-images" id="galleryImages"></div>
+                    <div class="add-img-area" onclick="document.getElementById('galleryUrlInput').focus()">
+                        <i class="fas fa-plus-circle"></i>
+                        <p>Add image URL</p>
+                        <div class="img-url-input">
+                            <input type="url" id="galleryUrlInput" placeholder="Paste image URL here...">
+                            <button class="btn btn-primary btn-sm" onclick="addGalleryImage()">Add</button>
+                        </div>
+                        <p style="font-size:11px;color:#bbb;margin-top:4px;">Supports any image URL • Add unlimited images</p>
+                    </div>
+                </div>
+                <div style="display:flex;gap:8px;justify-content:center;margin-top:16px;">
+                    <button class="btn btn-primary" onclick="saveGalleryImages()"><i class="fas fa-save"></i> Save Images</button>
+                    <button class="btn btn-secondary" onclick="closeModal('imageGalleryModal')">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="modalOverlay"></div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section"><h3>BookMyHotel<span class="logo-dot">.</span></h3><p>Your trusted platform for hotel and home bookings across India.</p></div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="hotels.html">Browse Hotels</a></li>
+                        <li><a href="my-bookings.html">My Bookings</a></li>
+                        <li><a href="#">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Cancellation Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2026 BookMyHotel. All rights reserved.</p></div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="js/firebase-init.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>
+

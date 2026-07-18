@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#1A2B4C">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- ===== SEO ===== -->
+    <meta name="description" content="Sign in or create an account on BookMyHotel. Access your bookings, manage your profile, and book hotels across India.">
+    <meta name="keywords" content="sign in, login, create account, hotel booking login, BookMyHotel account">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://bookmyhotel.com/login.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="BookMyHotel">
+    <meta property="og:title" content="Sign In - BookMyHotel | Your Perfect Stay Awaits">
+    <meta property="og:description" content="Sign in to access exclusive deals, manage your bookings, and discover thousands of hotels.">
+    <meta property="og:url" content="https://bookmyhotel.com/login.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Sign In - BookMyHotel">
+    <title>Sign In - BookMyHotel | Your Perfect Stay Awaits</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --auth-bg-image: url('https://images.unsplash.com/photo-1542314831-068cd1dbb5eb?w=1600');
+        }
+        body {
+            background-color: var(--gray-50);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        .auth-container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            max-width: 1400px;
+            max-height: 900px;
+            margin: auto;
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+        }
+        .auth-image-panel {
+            flex: 1;
+            background: var(--gradient-primary) var(--auth-bg-image) center/cover;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: var(--space-2xl);
+            color: var(--white);
+        }
+        .auth-image-panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(15, 28, 52, 0.8), rgba(26, 43, 76, 0.3));
+        }
+        .auth-image-content {
+            position: relative;
+            z-index: 2;
+            animation: fadeInUp 0.8s var(--ease-out) both;
+        }
+        .auth-image-content .logo {
+             font-size: 36px;
+             background: var(--gradient-accent);
+             -webkit-background-clip: text;
+             -webkit-text-fill-color: transparent;
+             margin-bottom: var(--space-md);
+        }
+        .auth-image-content h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: var(--space-sm);
+            line-height: 1.2;
+        }
+        .auth-image-content p {
+            font-size: 16px;
+            max-width: 400px;
+            opacity: 0.8;
+        }
+        .auth-form-panel {
+            flex: 1;
+            padding: var(--space-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+        .auth-card {
+            width: 100%;
+            max-width: 420px;
+            animation: fadeIn 0.6s var(--ease-out) 0.2s both;
+        }
+        .auth-card .logo {
+            font-size: 32px;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: var(--space-sm);
+        }
+        .auth-card .logo-dot { color: var(--accent); -webkit-text-fill-color: var(--accent); }
+        .auth-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: var(--space-xs);
+        }
+        .auth-subtitle {
+            text-align: center;
+            color: var(--gray-500);
+            margin-bottom: var(--space-lg);
+        }
+        .auth-form { display: none; }
+        .auth-form.active { display: block; animation: fadeIn 0.4s ease; }
+        .password-input-wrap { position: relative; }
+        .password-input-wrap input { padding-right: 45px !important; }
+        .password-toggle {
+            position: absolute; right: 0; top: 0;
+            height: 100%; width: 45px;
+            background: none; border: none; cursor: pointer;
+            color: var(--gray-500); font-size: 16px;
+            transition: var(--transition-fast);
+        }
+        .password-toggle:hover { color: var(--primary); }
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            margin-top: var(--space-sm);
+        }
+        .auth-role-text {
+            text-align: center;
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-bottom: var(--space-md);
+            background: var(--gray-50);
+            padding: var(--space-sm);
+            border-radius: var(--radius-md);
+        }
+        .auth-footer {
+            text-align: center;
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-top: var(--space-lg);
+        }
+        .auth-footer a { color: var(--primary); font-weight: 600; }
+        .auth-footer a:hover { text-decoration: underline; }
+        .hotel-login-link {
+            text-align: center;
+            margin: var(--space-md) 0;
+            font-size: 13px;
+        }
+        .hotel-login-link a { color: var(--accent-dark); font-weight: 600; }
+        .hotel-login-link a:hover { text-decoration: underline; }
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--gray-600);
+            margin: var(--space-sm) 0;
+            cursor: pointer;
+        }
+        .remember-me input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+        .role-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: var(--space-md);
+            background: var(--gray-light);
+            border-radius: var(--radius);
+            padding: 4px;
+        }
+        .role-tab {
+            flex: 1;
+            padding: 10px 14px;
+            border: none;
+            background: transparent;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--gray);
+            font-family: var(--font);
+            border-radius: var(--radius-sm);
+            white-space: nowrap;
+        }
+        .role-tab:hover { color: var(--primary); background: rgba(108,60,248,0.04); }
+        .role-tab.active {
+            color: var(--primary);
+            background: var(--white);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        @media (max-width: 992px) {
+            .auth-image-panel { display: none; }
+            .auth-container { display: block; height: auto; min-height: 100vh; border-radius: 0; }
+            .auth-form-panel { padding: var(--space-xl) var(--space-lg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="auth-image-panel">
+            <div class="auth-image-content">
+                <div class="logo">BookMyHotel<span class="logo-dot">.</span></div>
+                <h1>Your Perfect Stay, Awaits</h1>
+                <p>Sign in to access exclusive deals, manage your bookings, and discover thousands of hotels across the globe.</p>
+            </div>
+        </div>
+        <div class="auth-form-panel">
+            <div class="auth-card">
+                <div class="logo">BookMyHotel<span class="logo-dot">.</span></div>
+                <h2 class="auth-title" id="authTitle">Welcome Back</h2>
+                <p class="auth-subtitle" id="authSubtitle">Sign in to your account to continue</p>
+
+                <div class="role-tabs">
+                    <button class="role-tab active" type="button">Customer</button>
+                </div>
+
+
+                <div class="auth-error" id="authError"></div>
+                <div class="auth-success" id="authSuccess"></div>
+
+                <!-- Customer / Admin Login Form -->
+                <div class="auth-form active" id="customerLoginForm">
+                    <form onsubmit="handleFirebaseLogin(event)">
+                        <div class="form-group">
+                            <label for="loginEmail">Email Address</label>
+                            <input type="email" id="loginEmail" placeholder="you@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Password</label>
+                            <div class="password-input-wrap">
+                                <input type="password" id="loginPassword" placeholder="Enter password" required>
+                                <button type="button" class="password-toggle" onclick="togglePassword('loginPassword',this)"><i class="fas fa-eye"></i></button>
+                            </div>
+                        </div>
+                        <div class="remember-me">
+                            <input type="checkbox" id="keepSignedIn">
+                            <label for="keepSignedIn">Keep me signed in</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-login" id="loginBtn">
+                            <span class="btn-text">Sign In</span>
+                            <span class="loading-spinner"></span>
+                        </button>
+                    </form>
+                    <div class="auth-divider"><span>OR</span></div>
+                    <button class="btn btn-secondary btn-login" id="googleLoginBtn" onclick="signInWithGoogle()">
+                        <i class="fab fa-google"></i> Sign In with Google
+                    </button>
+                    <div class="auth-footer" style="margin-top:15px;">
+                        <p>Don't have an account? <a href="#" onclick="event.preventDefault();showSignupForm()">Create Account</a></p>
+                    </div>
+                </div>
+
+                <!-- Customer Signup Form -->
+                <div class="auth-form" id="customerSignupForm">
+                    <form onsubmit="handleFirebaseSignup(event)">
+                        <div class="form-group">
+                            <label for="signupName">Full Name</label>
+                            <input type="text" id="signupName" placeholder="John Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupEmail">Email Address</label>
+                            <input type="email" id="signupEmail" placeholder="you@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupPhone">Phone Number</label>
+                            <input type="tel" id="signupPhone" placeholder="+91 9876543210">
+                        </div>
+                        <div class="form-group">
+                            <label for="signupPassword">Password</label>
+                            <div class="password-input-wrap">
+                                <input type="password" id="signupPassword" placeholder="Min 6 characters" minlength="6" required>
+                                <button type="button" class="password-toggle" onclick="togglePassword('signupPassword',this)"><i class="fas fa-eye"></i></button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <div class="password-input-wrap">
+                                <input type="password" id="signupConfirm" placeholder="Confirm password" required>
+                                <button type="button" class="password-toggle" onclick="togglePassword('signupConfirm',this)"><i class="fas fa-eye"></i></button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-login" id="signupBtn">
+                            <span class="btn-text">Create Account</span>
+                            <span class="loading-spinner"></span>
+                        </button>
+                    </form>
+                    <div class="auth-footer" style="margin-top:15px;">
+                        <p>Already have an account? <a href="#" onclick="event.preventDefault();showLoginForm()">Sign In</a></p>
+                    </div>
+                </div>
+
+
+
+                <div class="hotel-login-link" id="hotelLoginLink">
+                    <a href="#" onclick="event.preventDefault();showHotelLogin()">Hotel Staff Login →</a>
+                </div>
+
+                <!-- Hotel Staff Login Form -->
+                <div class="auth-form" id="hotelLoginForm">
+                    <form onsubmit="handleHotelLogin(event)">
+                        <div class="form-group">
+                            <label for="hotelLoginId">Hotel ID / Email</label>
+                            <input type="text" id="hotelLoginId" placeholder="Enter Hotel ID or Email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="hotelLoginPassword">Password</label>
+                            <div class="password-input-wrap">
+                                <input type="password" id="hotelLoginPassword" placeholder="Enter password" required>
+                                <button type="button" class="password-toggle" onclick="togglePassword('hotelLoginPassword',this)"><i class="fas fa-eye"></i></button>
+                            </div>
+                        </div>
+                        <div class="remember-me">
+                            <input type="checkbox" id="hotelKeepSignedIn">
+                            <label for="hotelKeepSignedIn">Keep me signed in</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-login" id="hotelLoginBtn">
+                            <span class="btn-text">Sign In as Hotel Staff</span>
+                            <span class="loading-spinner"></span>
+                        </button>
+                    </form>
+                    <div class="auth-footer" style="margin-top:15px;">
+                        <p><a href="#" onclick="event.preventDefault();showNormalLogin()">← Back to Customer Login</a></p>
+                    </div>
+                </div>
+
+                <div class="auth-footer">
+                    <p>By continuing, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="js/firebase-init.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

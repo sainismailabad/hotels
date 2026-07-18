@@ -1,0 +1,22 @@
+
+/* ===== 44. HOTEL LOGIN PAGE ===== */
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0F1C34 0%,#1A2B4C 50%,#13223A 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 50%,rgba(212,175,55,0.06) 0%,transparent 50%),radial-gradient(circle at 70% 50%,rgba(212,175,55,0.04) 0%,transparent 50%);animation:bgMove 20s ease-in-out infinite alternate}
+@keyframes bgMove{0%{transform:translate(0,0) rotate(0deg)}100%{transform:translate(-5%,-5%) rotate(5deg)}}
+.login-wrap{position:relative;z-index:2;width:100%;max-width:420px;padding:20px;text-align:center}
+.login-box{background:rgba(255,255,255,0.97);backdrop-filter:blur(20px);border-radius:24px;padding:50px 40px 40px;box-shadow:0 40px 100px rgba(0,0,0,0.5),0 0 0 1px rgba(212,175,55,0.15);position:relative;overflow:hidden}
+.login-box::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,#1A2B4C,#D4AF37,#1A2B4C)}
+.login-brand{text-align:center;margin-bottom:30px}
+.login-brand .logo-text{font-size:36px;font-weight:900;background:linear-gradient(135deg,#1A2B4C 0%,#D4AF37 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-0.5px}
+.login-brand .logo-text span{color:#D4AF37;-webkit-text-fill-color:#D4AF37}
+.login-brand h2{font-size:22px;margin-top:8px;color:#1A2B4C;font-weight:800}
+.login-brand p{color:#6C757D;font-size:14px;margin-top:4px}
+.hotel-icon-wrap{width:80px;height:80px;background:linear-gradient(135deg,rgba(26,43,76,0.1),rgba(212,175,55,0.1));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;border:2px solid rgba(212,175,55,0.2)}
+.hotel-icon-wrap i{font-size:34px;color:#1A2B4C}
+.login-footer{text-align:center;margin-top:24px;font-size:13px;color:#6C757D}
+.login-footer a{color:#1A2B4C;font-weight:600;transition:color 0.3s}
+.login-footer a:hover{color:#D4AF37}
+.redirect-btn{display:inline-block;margin-top:15px;padding:12px 28px;background:linear-gradient(135deg,#1A2B4C,#0F1C34);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.3s ease;font-family:inherit;text-decoration:none}
+.redirect-btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(26,43,76,0.35)}
+@media(max-width:480px){.login-box{padding:30px 24px;border-radius:16px}.login-wrap{padding:12px}}

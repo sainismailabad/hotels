@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#1A2B4C">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="Admin panel for managing hotels, bookings and partners - BookMyHotel">
+    <title>Admin Panel - BookMyHotel</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">BookMyHotel<span class="logo-dot">.</span></a>
+                <nav class="nav-menu">
+                    <ul id="navLinks">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="hotels.html">Hotels</a></li>
+                    </ul>
+                    <ul id="navAuth"></ul>
+                </nav>
+                <div class="hamburger"><span></span><span></span><span></span></div>
+            </div>
+        </div>
+    </header>
+
+    <section class="page-banner">
+        <div class="container">
+            <h1>Master Admin Engine</h1>
+            <p>Audit operations, manage partners, hotels, users, and platform commissions</p>
+        </div>
+    </section>
+
+    <section class="admin-panel">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-hotel"></i></div><div><span class="stat-number" id="totalHotelsStat">0</span><span class="stat-label">Total Hotels</span></div></div>
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-calendar-check"></i></div><div><span class="stat-number" id="totalBookingsStat">0</span><span class="stat-label">Total Bookings</span></div></div>
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-check-circle"></i></div><div><span class="stat-number" id="activeBookingsStat">0</span><span class="stat-label">Active Bookings</span></div></div>
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div><span class="stat-number" id="totalUsersStat">0</span><span class="stat-label">Total Users</span></div></div>
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-handshake"></i></div><div><span class="stat-number" id="totalPartnersStat">0</span><span class="stat-label">Partners</span></div></div>
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-rupee-sign"></i></div><div><span class="stat-number" id="totalRevenueStat">₹0</span><span class="stat-label">Total Revenue</span></div></div>
+            </div>
+
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="switchTab('hotels')">Hotels</button>
+                <button class="tab-btn" onclick="switchTab('partners')">Partners</button>
+                <button class="tab-btn" onclick="switchTab('bookings')">Bookings</button>
+                <button class="tab-btn" onclick="switchTab('users')">Users</button>
+                <button class="tab-btn" onclick="switchTab('cities')">Cities</button>
+                <button class="tab-btn" onclick="switchTab('create-user')">+ Add User</button>
+                <button class="tab-btn" onclick="switchTab('settings')">Settings</button>
+                <button class="tab-btn" onclick="switchTab('hotel-credentials')">Hotel Credentials</button>
+                <button class="tab-btn" onclick="switchTab('offers')">Offers & Coupons</button>
+                <button class="tab-btn" onclick="switchTab('whatsapp')">📱 WhatsApp</button>
+                <button class="tab-btn" onclick="switchTab('add-hotel')">+ Add Hotel</button>
+            </div>
+
+            <div class="tab-content active" id="tab-hotels">
+                <div class="admin-table-container">
+                    <table class="admin-table">
+                        <thead><tr><th>ID</th><th>Hotel</th><th>Partner</th><th>Location</th><th>Price</th><th>Rating</th><th>Rooms</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody id="hotelsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-partners">
+                <div class="admin-table-container">
+                    <table class="admin-table">
+                        <thead><tr><th>ID</th><th>Company</th><th>Owner</th><th>Email</th><th>Hotels</th><th>Commission</th><th>Revenue</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody id="partnersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-bookings">
+                <div class="admin-table-container">
+                    <table class="admin-table">
+                        <thead><tr><th>Booking ID</th><th>Customer</th><th>Hotel</th><th>Room</th><th>Check In</th><th>Check Out</th><th>Guests</th><th>Amount</th><th>Payment</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody id="bookingsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-users">
+                <div class="admin-table-container">
+                    <table class="admin-table">
+                        <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Mobile</th><th>Type</th><th>Joined</th><th>Status</th></tr></thead>
+                        <tbody id="usersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-cities">
+                <div class="admin-form-container cities-form-container">
+                    <h3>Manage Cities</h3>
+                    <p class="form-helper">Add cities so they appear in the hotel dropdown.</p>
+                    <form id="addCityForm" onsubmit="addCity(event)">
+                        <div class="form-row">
+                            <div class="form-group"><label>City Name</label><input type="text" id="newCityName" placeholder="e.g. Mumbai" required></div>
+                            <div class="form-group"><label>State</label><input type="text" id="newCityState" placeholder="e.g. Maharashtra" required></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add City</button>
+                    </form>
+                    <div class="cities-list-wrap">
+                        <h4 class="cities-list-title">Added Cities</h4>
+                        <div id="citiesList" class="cities-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-create-user">
+                <div class="admin-form-container">
+                    <h3>Create New User</h3>
+                    <p class="form-helper">Create partner or admin accounts.</p>
+                    <form id="createUserForm" onsubmit="createNewUser(event)">
+                        <div class="form-row">
+                            <div class="form-group"><label>Full Name</label><input type="text" id="newUserName" required></div>
+                            <div class="form-group"><label>Email</label><input type="email" id="newUserEmail" required></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Phone</label><input type="tel" id="newUserPhone" required></div>
+                            <div class="form-group"><label>Type</label><select id="newUserType"><option value="partner">Partner</option><option value="admin">Admin</option></select></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Password</label><input type="password" id="newUserPassword" minlength="6" required></div>
+                            <div class="form-group"><label>Confirm</label><input type="password" id="newUserConfirm" required></div>
+                        </div>
+                        <div id="partnerFields">
+                            <div class="form-row">
+                                <div class="form-group"><label>Company Name</label><input type="text" id="newUserCompany" placeholder="Hotel Company Name"></div>
+                                <div class="form-group"><label>Commission (%)</label><input type="number" id="newUserCommission" value="15"></div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create User</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-settings">
+                <div class="admin-form-container settings-form-container">
+                    <h3>Platform Settings</h3>
+                    <form onsubmit="savePlatformSettings(event)">
+                        <div class="form-group"><label>Platform Name</label><input type="text" id="settingsPlatformName" value="BookMyHotel"></div>
+                        <div class="form-group"><label>Default Commission (%)</label><input type="number" id="settingsCommission" value="15"></div>
+                        <div class="form-group"><label>Support Email</label><input type="email" id="settingsEmail" value="support@bookmyhotel.com"></div>
+                        <div class="form-group"><label>Support Phone</label><input type="text" id="settingsPhone" value="1800-BOOKMYHOTEL"></div>
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-hotel-credentials">
+                <div class="admin-form-container" style="max-width:100%;">
+                    <h3>Hotel Credentials Manager</h3>
+                    <p class="form-helper">Create Hotel ID + Password for hotel staff to access the Hotel Manager page directly.</p>
+                    <form id="hotelCredForm" onsubmit="createHotelCredential(event)">
+                        <div class="form-row">
+                            <div class="form-group"><label>Select Hotel</label><select id="credHotelSelect" required></select></div>
+                            <div class="form-group"><label>Hotel ID (Login ID)</label><input type="text" id="credHotelId" placeholder="e.g. hotel_mumbai_01" required></div>
+                        </div>
+
+                        <div class="form-row" style="align-items:end;">
+                            <div class="form-group" style="display:flex;align-items:flex-end;gap:8px;">
+                                <button type="button" class="btn btn-secondary" onclick="generateCredHotelId()" style="padding:10px 14px;"><i class="fas fa-id-card"></i> Generate Hotel ID</button>
+                                <button type="button" class="btn btn-secondary" onclick="copyToClipboard('credHotelId')" style="padding:10px 14px;"><i class="fas fa-copy"></i> Copy</button>
+                            </div>
+
+                            <div class="form-group"><label>Password</label><input type="text" id="credPassword" placeholder="Auto-generated or type manually" required></div>
+                        </div>
+
+                        <div class="form-row" style="margin-top:0;">
+                            <div class="form-group" style="display:flex;align-items:flex-end;gap:8px;">
+                                <button type="button" class="btn btn-secondary" onclick="generateCredPassword()" style="padding:10px 14px;"><i class="fas fa-key"></i> Generate Password</button>
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create Credential</button>
+                            </div>
+                            <div class="form-group"></div>
+                        </div>
+                        <p class="helper-text"><i class="fas fa-info-circle"></i> Hotel staff can login at <strong><a href="hotel-login.html">hotel-login.html</a></strong> using the Hotel ID and password to access the Hotel Manager page.</p>
+                    </form>
+                    <hr style="margin:25px 0;border-color:var(--gray-border);">
+                    <h4 style="margin-bottom:15px;">Existing Hotel Credentials</h4>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead><tr><th>Hotel ID</th><th>Hotel Name</th><th>Password</th><th>Status</th><th>Actions</th></tr></thead>
+                            <tbody id="hotelCredTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-offers">
+                <div class="admin-form-container" style="max-width:100%;">
+                    <h3><i class="fas fa-tags"></i> Offers & Coupons</h3>
+                    <p class="form-helper">Create discount offers and coupon codes for customers. Apply to all hotels or specific properties.</p>
+                    
+                    <form id="offerForm" onsubmit="saveOffer(event)">
+                        <input type="hidden" id="offerId">
+                        <div class="form-row">
+                            <div class="form-group"><label>Offer Title</label><input type="text" id="offerTitle" placeholder="e.g. Summer Sale, Monsoon Discount" required></div>
+                            <div class="form-group"><label>Coupon Code</label><input type="text" id="offerCode" placeholder="e.g. SUMMER25, MONSOON50" required style="text-transform:uppercase;"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Discount Type</label><select id="offerType"><option value="percentage">Percentage (%)</option><option value="fixed">Fixed Amount (₹)</option></select></div>
+                            <div class="form-group"><label>Discount Value</label><input type="number" id="offerValue" placeholder="e.g. 20 or 500" required min="1"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Applicable To</label><select id="offerScope" onchange="toggleOfferHotelSelect()"><option value="all">All Hotels</option><option value="specific">Specific Hotels</option></select></div>
+                            <div class="form-group" id="offerHotelSelectGroup" style="display:none;"><label>Select Hotels</label><select id="offerHotels" multiple style="height:120px;"></select></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Min Booking Amount (₹)</label><input type="number" id="offerMinAmount" placeholder="0 = no minimum" min="0" value="0"></div>
+                            <div class="form-group" id="offerMaxDiscountGroup"><label>Max Discount (₹)</label><input type="number" id="offerMaxDiscount" placeholder="No limit" min="0"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Valid From</label><input type="date" id="offerValidFrom" required></div>
+                            <div class="form-group"><label>Valid Till</label><input type="date" id="offerValidTill" required></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Usage Limit (total)</label><input type="number" id="offerUsageLimit" placeholder="Unlimited" min="1"></div>
+                            <div class="form-group"><label>Status</label><select id="offerStatus"><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Description</label><input type="text" id="offerDescription" placeholder="Short description for customers"></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="offerSubmitBtn"><i class="fas fa-save"></i> Create Offer</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetOfferForm()"><i class="fas fa-undo"></i> Reset</button>
+                    </form>
+
+                    <hr style="margin:30px 0;border-color:var(--gray-border);">
+                    <h4 style="margin-bottom:20px;display:flex;align-items:center;gap:10px;"><i class="fas fa-list"></i> Active Offers & Coupons</h4>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead><tr><th>Code</th><th>Title</th><th>Type</th><th>Value</th><th>Scope</th><th>Valid</th><th>Usage</th><th>Status</th><th>Actions</th></tr></thead>
+                            <tbody id="offersTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-add-hotel">
+                <div class="admin-form-container">
+                    <h3>Add New Hotel</h3>
+                    <p class="form-helper">First add cities in the <a href="#" onclick="switchTab('cities');return false;" class="helper-link">Cities tab</a>. Hotel staff will login at <strong><a href="hotel-login.html">hotel-login.html</a></strong> using the Hotel Email + Password below.</p>
+                    <form id="addHotelForm" onsubmit="createHotelWithCredentials(event)">
+                        <div class="form-row">
+                            <div class="form-group"><label>Hotel Name</label><input type="text" id="newHotelName" required></div>
+                            <div class="form-group"><label>Hotel Email (Login ID for Staff)</label><input type="email" id="newHotelEmail" placeholder="hotel@email.com" required></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>City</label><select id="newHotelCity" required><option value="">Select city first</option></select></div>
+                            <div class="form-group"><label>State</label><input type="text" id="newHotelState" placeholder="Auto-filled" readonly></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Partner</label><select id="newHotelPartner" required></select></div>
+                            <div class="form-group"><label>Stars</label><select id="newHotelStars"><option value="3">3★</option><option value="4">4★</option><option value="5">5★</option></select></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Hotel ID (Login ID)</label><input type="text" id="newHotelIdDisplay" placeholder="Auto-generated" readonly></div>
+                            <div class="form-group"><label>Hotel Password</label><input type="text" id="newHotelPassword" placeholder="Type password or auto-generate"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group" style="display:flex;align-items:flex-end;gap:8px;">
+                                <button type="button" class="btn btn-secondary" onclick="generateHotelIdForForm()" style="padding:10px 14px;"><i class="fas fa-id-card"></i> Generate ID</button>
+                                <button type="button" class="btn btn-secondary" onclick="generateHotelPasswordForForm()" style="padding:10px 14px;"><i class="fas fa-key"></i> Generate Password</button>
+                            </div>
+                            <div class="form-group"><label>Price (₹)</label><input type="number" id="newHotelPrice" required min="500"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Rating</label><input type="number" id="newHotelRating" required min="1" max="5" step="0.1"></div>
+                            <div class="form-group"><label>Total Rooms</label><input type="number" id="newHotelRooms" required min="1"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Available Rooms</label><input type="number" id="newHotelAvailable" required min="1"></div>
+                        </div>
+                        <div class="form-group"><label>Description</label><textarea id="newHotelDesc" rows="3" required></textarea></div>
+                        <div class="form-group"><label>Hotel Images (URLs - max 10)</label>
+                            <div id="hotelImageInputs">
+                                <div style="display:flex;gap:8px;margin-bottom:6px;"><input type="url" id="newHotelImage0" class="hotel-img-input" placeholder="Main image URL" required style="flex:1;"><button type="button" class="btn btn-sm btn-secondary" onclick="addImageRow()" id="addImgBtn" style="white-space:nowrap;">+ Add</button></div>
+                            </div>
+                            <small style="color:var(--gray-500);">First image = main display image. Add up to 10 images.</small>
+                        </div>
+                        <div class="form-group"><label>Amenities (comma)</label><input type="text" id="newHotelAmenities" placeholder="Free WiFi, Pool, Gym" required></div>
+                        <button type="submit" class="btn btn-primary">Add Hotel + Generate Credentials</button>
+                    </form>
+                    <div id="hotelCredResult" style="display:none; margin-top:20px; padding:20px; background:var(--gray-light); border-radius:var(--radius); border-left:4px solid var(--secondary);">
+                        <h4 style="margin-bottom:10px;"><i class="fas fa-check-circle" style="color:#276749;"></i> Hotel Created Successfully!</h4>
+                        <p style="margin-bottom:10px; font-weight:600;">Share these credentials with the hotel staff:</p>
+                        <div style="background:var(--white); padding:15px; border-radius:var(--radius-sm); font-family:monospace; font-size:14px;">
+                            <p><strong>Hotel ID:</strong> <span id="resultHotelId"></span></p>
+                            <p><strong>Password:</strong> <span id="resultHotelPassword"></span></p>
+                            <p><strong>Hotel:</strong> <span id="resultHotelName"></span></p>
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="copyHotelCreds()" style="margin-top:10px;"><i class="fas fa-copy"></i> Copy Credentials</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal" id="editHotelModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('editHotelModal')">&times;</span>
+            <div class="modal-body">
+                <h2>Edit Hotel</h2>
+                <form id="editHotelForm" onsubmit="saveEditHotel(event)">
+                    <input type="hidden" id="editHotelId">
+                    <div class="form-group"><label>Name</label><input type="text" id="editHotelName" required></div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Price (₹)</label><input type="number" id="editHotelPrice" required min="500"></div>
+                        <div class="form-group"><label>Status</label><select id="editHotelStatus"><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Total Rooms</label><input type="number" id="editHotelRooms" required min="1"></div>
+                        <div class="form-group"><label>Available</label><input type="number" id="editHotelAvailable" required min="0"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="editPartnerModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('editPartnerModal')">&times;</span>
+            <div class="modal-body">
+                <h2>Edit Partner</h2>
+                <form id="editPartnerForm" onsubmit="saveEditPartner(event)">
+                    <input type="hidden" id="editPartnerId">
+                    <div class="form-group"><label>Company</label><input type="text" id="editPartnerName" required></div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Commission (%)</label><input type="number" id="editPartnerCommission" required min="0" max="100"></div>
+                        <div class="form-group"><label>Status</label><select id="editPartnerStatus"><option value="active">Active</option><option value="inactive">Suspended</option></select></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section"><h3>BookMyHotel<span class="logo-dot">.</span></h3><p>Admin control center.</p></div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul><li><a href="hotels.html">Browse Hotels</a></li><li><a href="my-bookings.html">My Bookings</a></li></ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul><li><a href="#">Help Center</a></li><li><a href="#">Admin Guide</a></li><li><a href="#">Terms</a></li></ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2026 BookMyHotel. All rights reserved.</p></div>
+        </div>
+    </footer>
+
+    <div class="modal-overlay" id="modalOverlay"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="js/firebase-init.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
+
